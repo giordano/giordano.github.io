@@ -8,11 +8,14 @@ author:
   name: Mosè Giordano
   github: giordano
   twitter: MoseGiordano
+  stackoverflow: "2442087/giordano"
 
 # Select which links to show in the footer
 footer-links-active:
+  rss: true
   twitter: true
   github: true
+  stackoverflow: true
 
 # Select which share links to show in posts
 share-links-active:
