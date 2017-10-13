@@ -1,3 +1,29 @@
 title: Mosè Giordano
-author: Mosè Giordano
 theme: jekyll-theme-time-machine
+
+# List of links in the navigation bar
+navbar-links:
+  About Me: "aboutme"
+
+author:
+  name: Mosè Giordano
+  github: giordano
+  twitter: MoseGiordano
+
+# Select which links to show in the footer
+footer-links-active:
+  twitter: true
+  github: true
+
+# Select which share links to show in posts
+share-links-active:
+  twitter: true
+  github: true
+
+# Excerpt Word Length
+# Truncates the excerpt to the specified number of words on the index page
+excerpt_length: 50
+
+# Character used to separate site title and description in HTML document title
+# and RSS feed title
+title-separator: "-"
