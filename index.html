@@ -6,6 +6,7 @@ use-site-title: true
 
 <div class="posts-list">
   {% for post in paginator.posts %}
+  {% unless post.tags contains 'draft' %}
   <article class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
 	  <h2 class="post-title">{{ post.title }}</h2>
@@ -52,6 +53,7 @@ use-site-title: true
     {% endif %}
 
    </article>
+  {% endunless %}
   {% endfor %}
 </div>
 
