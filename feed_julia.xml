@@ -10,7 +10,7 @@ layout: null
     <atom:link href="{{ site.url }}/feed_julia.xml" rel="self" type="application/rss+xml" />
     {% for post in site.posts %}
       {% if post.tags contains 'julia' %}
-        {% unless post.tags contains 'drafts' %}
+        {% unless post.tags contains 'draft' %}
 	  <item>
 	    <title>{{ post.title | xml_escape }}</title>
 	    <description>
