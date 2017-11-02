@@ -89,7 +89,8 @@ prose:
   ignore:
     - 404.html
     - LICENSE
-    - feed.xml
+    - /blog/feed.xml
+    - /blog/feed_julia.xml
     - _config.yml
     - /_layouts
     - /_includes
