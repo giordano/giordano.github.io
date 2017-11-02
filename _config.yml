@@ -2,7 +2,9 @@ title: Mosè Giordano
 
 # List of links in the navigation bar
 navbar-links:
-  Blog: "blog/"
+  Blog:
+    - { Home: 'blog/' }
+    - { Tags: 'blog/tags/' }
   About Me: "aboutme"
 
 # Image to show in the navigation bar - image must be a square (width = height)
@@ -67,7 +69,7 @@ defaults:
       show-avatar: true
 
 # Use tags pages (not recommended if you are deploying via GitHub pages, only set to true if deploying locally with ruby)
-link-tags: false
+link-tags: true
 
 # Exclude these files from production site
 exclude:
