@@ -2,6 +2,7 @@ title: Mosè Giordano
 
 # List of links in the navigation bar
 navbar-links:
+  Blog: "blog/"
   About Me: "aboutme"
 
 author:
@@ -36,8 +37,11 @@ title-separator: "-"
 timezone: "Europe/Rome"
 markdown: kramdown
 highlighter: rouge
-permalink: /:year-:month-:day-:title/
+permalink: /blog/:year-:month-:day-:title/
 paginate: 5
+
+# https://github.com/daattali/beautiful-jekyll#how-do-i-move-the-blog-to-another-page-instead-of-having-it-on-the-home-page
+paginate_path: "/blog/page:num/"
 
 kramdown:
   input: GFM
