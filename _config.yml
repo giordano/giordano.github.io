@@ -29,6 +29,10 @@ share-links-active:
   twitter: true
   github: true
 
+# Fill in your Disqus shortname (NOT the userid) if you want to support Disqus comments
+disqus: "giordanogithubio"
+
+
 # Excerpt Word Length
 # Truncates the excerpt to the specified number of words on the index page
 excerpt_length: 50
