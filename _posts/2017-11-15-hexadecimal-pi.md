@@ -22,10 +22,10 @@ $$\pi$$ without computing the preceding ones.
 
 _Image courtesy of [Cormullion](https://github.com/cormullion),
 code
-[here](https://gist.github.com/cormullion/e979d819e478da73280faaeb67490888)_
+[here](https://gist.github.com/cormullion/e979d819e478da73280faaeb67490888)._
 
 The Wikipedia article about the Bailey–Borwein–Plouffe formula explains that the
-$$n$-th digit $$d_{n}$$ is given by
+$$n$$-th digit $$d_{n}$$ is given by
 
 $$ d_{n} = 16 \left[ 4 \Sigma(n, 1) - 2 \Sigma(n, 4) - \Sigma(n, 5) - \Sigma(n,
 6) \right] $$
@@ -39,28 +39,29 @@ Only the fractional part of expression in square brackets on the right side of
 $$d_{n}$$ expression is relevant, thus, in order to avoid rounding errors, when
 we compute each term of the finite sum above we can take only the fractional
 part.  This allows us to always use ordinary double precision floating-point
-arithmetic, without resorting to arbitrary precision numbers.  In addition note
+arithmetic, without resorting to arbitrary-precision numbers.  In addition note
 that the terms of the infinite sum get quickly very small, so we can stop the
 summation when they become negligible.
 
 Here is a [Julia](https://julialang.org/) implementation of the algorithm to
 extract the $$n$$-th digit of $$\pi$$:
 
-```julia
+{% highlight julia linenos %}
 # Return the fractional part of x, modulo 1, always positive
 fpart(x) = mod(x, one(x))
 
 function Σ(n, j)
     # Compute the finite sum
     s = 0.0
+    denom = j
     for k in 0:n
-        s = fpart(s + powermod(16, n - k, 8k + j) / (8k + j))
+        s = fpart(s + powermod(16, n - k, denom) / denom)
+        denom += 8
     end
     # Compute the infinite sum
     num = 1 / 16
-    denom = 8(n + 1) + j
     frac = num / denom
-    while frac > eps(Float64)
+    while frac > eps(s)
         s     += frac
         num   /= 16
         denom += 8
@@ -72,7 +73,7 @@ end
 pi_digit(n) = floor(Int, 16 * fpart(4Σ(n, 1) - 2Σ(n, 4) - Σ(n, 5) - Σ(n, 6)))
 
 pi_string(n) = "0x3." * join(hex.(pi_digit.(0:(n-1)))) * "p0"
-```
+{% endhighlight %}
 
 The `pi_string` function returns a string which is a valid hexadecimal
 floating-point literal:
@@ -104,8 +105,8 @@ julia> parse(Float64, pi_string(13)) - π
 We can go use the
 arbitrary-precision
 [`BigFloat`](https://docs.julialang.org/en/stable/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1) to
-check the correctness of the result for more digits.  By default, `BigFloat`
-numbers in Julia have a 256-bit mantissa:
+check the correctness of the result for even more digits.  By default,
+`BigFloat` numbers in Julia have a 256-bit mantissa:
 
 ```
 julia> precision(BigFloat)
