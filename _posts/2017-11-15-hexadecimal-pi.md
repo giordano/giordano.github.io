@@ -75,8 +75,8 @@ pi_digit(n) = floor(Int, 16 * fpart(4Σ(n, 1) - 2Σ(n, 4) - Σ(n, 5) - Σ(n, 6))
 pi_string(n) = "0x3." * join(hex.(pi_digit.(0:(n-1)))) * "p0"
 {% endhighlight %}
 
-The `pi_string` function returns a string which is a valid hexadecimal
-floating-point literal:
+The `pi_string` function returns the first $$n$$ hexadecimal digits of $$\pi$$
+as a valid hexadecimal floating-point literal:
 
 ```julia
 julia> pi_string(1000)
@@ -113,8 +113,8 @@ julia> precision(BigFloat)
 256
 ```
 
-Let’s check the result for the first $$256 / \log_{2}(16) = 64$$ digits of
-hexadecimal $$\pi$$:
+The result is correct for the first $$256 / \log_{2}(16) = 64$$ hexadecimal
+digits:
 
 ```julia
 julia> pi_string(64)
