@@ -33,8 +33,7 @@ $$ d_{n} = 16 \left[ 4 \Sigma(n, 1) - 2 \Sigma(n, 4) - \Sigma(n, 5) - \Sigma(n,
 where
 
 $$ \Sigma(n, j) = \sum_{k = 0}^{n} \frac{16^{n-k} \bmod (8k+j)}{8k+j} + \sum_{k
-= n + 1}^{\infty} \frac{16^{n-k}}{8k+j} = \sum_{k = 0}^{n} \frac{16^{n-k} \bmod
-(8k+j)}{8k+j} + \sum_{k = 1}^{\infty} \frac{16^{-k}}{8(n + k)+j} $$
+= 1}^{\infty} \frac{16^{-k}}{8(n + k)+j} $$
 
 Only the fractional part of expression in square brackets on the right side of
 $$d_{n}$$ expression is relevant, thus, in order to avoid rounding errors, when
