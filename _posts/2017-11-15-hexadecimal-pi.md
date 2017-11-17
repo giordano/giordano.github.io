@@ -15,8 +15,8 @@ $$ \pi = \sum_{k = 0}^{\infty}\left[ \frac{1}{16^k} \left( \frac{4}{8k + 1} -
 \frac{2}{8k + 4} - \frac{1}{8k + 5} - \frac{1}{8k + 6} \right) \right] $$
 
 What makes this formula stand out among other approximations of $$\pi$$ is that
-it allows one to directly extract the $$n$$-th digit of the hexadecimal value of
-$$\pi$$ without computing the preceding ones.
+it allows one to directly extract the $$n$$-th fractional digit of the
+hexadecimal value of $$\pi$$ without computing the preceding ones.
 
 [![Digits of pi](https://cloud.githubusercontent.com/assets/52289/23835253/0277a45e-075c-11e7-9431-14b8613e15ce.png)](https://cloud.githubusercontent.com/assets/52289/23835253/0277a45e-075c-11e7-9431-14b8613e15ce.png)
 
@@ -25,7 +25,8 @@ code
 [here](https://gist.github.com/cormullion/e979d819e478da73280faaeb67490888)._
 
 The Wikipedia article about the Bailey–Borwein–Plouffe formula explains that the
-$$n$$-th digit $$d_{n}$$ is given by
+$$n$$-th fractional digit (well, actually it’s the $$n+1$$-th) $$d_{n}$$ is
+given by
 
 $$ d_{n} = 16 \left[ 4 \Sigma(n, 1) - 2 \Sigma(n, 4) - \Sigma(n, 5) - \Sigma(n,
 6) \right] $$
@@ -33,20 +34,20 @@ $$ d_{n} = 16 \left[ 4 \Sigma(n, 1) - 2 \Sigma(n, 4) - \Sigma(n, 5) - \Sigma(n,
 where
 
 $$ \Sigma(n, j) = \sum_{k = 0}^{n} \frac{16^{n-k} \bmod (8k+j)}{8k+j} + \sum_{k
-= 1}^{\infty} \frac{16^{-k}}{8(n + k)+j} $$
+= n+1}^{\infty} \frac{16^{n-k}}{8k+j} $$
 
 Only the fractional part of expression in square brackets on the right side of
-$$d_{n}$$ expression is relevant, thus, in order to avoid rounding errors, when
-we compute each term of the finite sum above we can take only the fractional
-part.  This allows us to always use ordinary double precision floating-point
-arithmetic, without resorting to arbitrary-precision numbers.  In addition note
-that the terms of the infinite sum get quickly very small, so we can stop the
-summation when they become negligible.
+$$d_{n}$$ is relevant, thus, in order to avoid rounding errors, when we compute
+each term of the finite sum above we can take only the fractional part.  This
+allows us to always use ordinary double precision floating-point arithmetic,
+without resorting to arbitrary-precision numbers.  In addition note that the
+terms of the infinite sum get quickly very small, so we can stop the summation
+when they become negligible.
 
 ## Implementation in Julia language
 
 Here is a [Julia](https://julialang.org/) implementation of the algorithm to
-extract the $$n$$-th digit of $$\pi$$:
+extract the $$n$$-th fractional digit of $$\pi$$:
 
 {% highlight julia linenos %}
 # Return the fractional part of x, modulo 1, always positive
@@ -72,20 +73,22 @@ function Σ(n, j)
     return fpart(s)
 end
 
-pi_digit(n) = floor(Int, 16 * fpart(4Σ(n, 1) - 2Σ(n, 4) - Σ(n, 5) - Σ(n, 6)))
+pi_digit(n) =
+    floor(Int, 16 * fpart(4Σ(n+1, 1) - 2Σ(n+1, 4) - Σ(n+1, 5) - Σ(n+1, 6)))
 
-pi_string(n) = "0x3." * join(hex.(pi_digit.(0:(n-1)))) * "p0"
+pi_string(n) = "0x3." * join(hex.(pi_digit.(1:n))) * "p0"
 {% endhighlight %}
 
-The `pi_digit` functions gives the $$n+1$$-th hexadecimal digit of $$\pi$$ as a
-base-10 integer, and the `pi_string` function returns the first $$n$$
-hexadecimal digits of $$\pi$$ as a valid hexadecimal floating-point literal:
+The `pi_digit` functions gives the $$n$$-th hexadecimal fractional digit of
+$$\pi$$ as a base-10 integer, and the `pi_string` function returns the first
+$$n$$ hexadecimal digits of $$\pi$$ as a valid hexadecimal floating-point
+literal:
 
 ```julia
-julia> pi_digit(0)
+julia> pi_digit(1)
 2
 
-julia> pi_digit(5)
+julia> pi_digit(6)
 10
 
 julia> pi_string(1000)
@@ -121,6 +124,15 @@ julia> Float64(π) == parse(Float64, pi_string(13))
 true
 ```
 
+[Generator expressions](https://docs.julialang.org/en/stable/manual/arrays/#Generator-Expressions-1) allow
+us to obtain the decimal value of the number in a very simple way, without using
+the hexadecimal string:
+
+```julia
+julia> 3 + sum(pi_digit(n)/16^n for n in 1:13)
+3.141592653589793
+```
+
 We can use
 the
 [arbitrary-precision](https://docs.julialang.org/en/stable/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1) `BigFloat`
@@ -141,6 +153,9 @@ julia> pi_string(64)
 
 julia> BigFloat(π) == parse(BigFloat, pi_string(64))
 true
+
+julia> 3 + sum(pi_digit(n)/big(16)^n for n in 1:66)
+3.141592653589793238462643383279502884197169399375105820974944592307816406286198
 ```
 
 It’s possible to increase the precision of `BigFloat` numbers, to further test
@@ -155,7 +170,7 @@ true
 
 ## Multi-threading
 
-Since Bailey–Borwein–Plouffe formula extracts the $$n$$-th digit of $$\pi$$
+Since the Bailey–Borwein–Plouffe formula extracts the $$n$$-th digit of $$\pi$$
 without computing the other ones, we can write a multi-threaded version of
 `pi_string`, taking advantage of native support
 for
@@ -166,7 +181,7 @@ in Julia:
 function pi_string_threaded(N)
     digits = Vector{Int}(N)
     Threads.@threads for n in eachindex(digits)
-        digits[n] = pi_digit(n - 1)
+        digits[n] = pi_digit(n)
     end
     return "0x3." * join(hex.(digits)) * "p0"
 end
