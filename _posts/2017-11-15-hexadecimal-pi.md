@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Computing the hexadecimal value of pi
-tags: draft julia math pi
+tags: julia math pi
 ---
 
 The
@@ -20,7 +20,7 @@ hexadecimal value of $$\pi$$ without computing the preceding ones.
 
 [![Digits of pi](https://cloud.githubusercontent.com/assets/52289/23835253/0277a45e-075c-11e7-9431-14b8613e15ce.png)](https://cloud.githubusercontent.com/assets/52289/23835253/0277a45e-075c-11e7-9431-14b8613e15ce.png)
 
-_Image courtesy of [Cormullion](https://github.com/cormullion), Julia
+_Image credit: [Cormullion](https://github.com/cormullion), Julia
 code
 [here](https://gist.github.com/cormullion/e979d819e478da73280faaeb67490888)._
 
@@ -74,12 +74,12 @@ function Σ(n, j)
 end
 
 pi_digit(n) =
-    floor(Int, 16 * fpart(4Σ(n+1, 1) - 2Σ(n+1, 4) - Σ(n+1, 5) - Σ(n+1, 6)))
+    floor(Int, 16 * fpart(4Σ(n-1, 1) - 2Σ(n-1, 4) - Σ(n-1, 5) - Σ(n-1, 6)))
 
 pi_string(n) = "0x3." * join(hex.(pi_digit.(1:n))) * "p0"
 {% endhighlight %}
 
-The `pi_digit` functions gives the $$n$$-th hexadecimal fractional digit of
+The `pi_digit` function gives the $$n$$-th hexadecimal fractional digit of
 $$\pi$$ as a base-10 integer, and the `pi_string` function returns the first
 $$n$$ hexadecimal digits of $$\pi$$ as a valid hexadecimal floating-point
 literal:
@@ -108,7 +108,7 @@ more efficient than that available in Julia standard library.
 Let’s check if the function is working correctly.  We can use
 the
 [`parse`](https://docs.julialang.org/en/stable/stdlib/numbers/#Base.parse-Tuple{Type,Any,Any}) function
-to covert the string to a decimal floating point
+to convert the string to a decimal floating point
 number.  [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) double precision
 floating-point numbers have a 53-bit mantissa, amounting to $$53 / \log_{2}(16)
 \approx 13$$ hexadecimal digits:
@@ -154,7 +154,7 @@ julia> pi_string(64)
 julia> BigFloat(π) == parse(BigFloat, pi_string(64))
 true
 
-julia> 3 + sum(pi_digit(n)/big(16)^n for n in 1:66)
+julia> 3 + sum(pi_digit(n)/big(16)^n for n in 1:64)
 3.141592653589793238462643383279502884197169399375105820974944592307816406286198
 ```
 
