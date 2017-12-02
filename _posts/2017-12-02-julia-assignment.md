@@ -1,21 +1,21 @@
 ---
 layout: post
 title: Returned value of assignment in Julia
-tags: draft julia
+tags: julia
 ---
 
-Only today I realized by chance that in
-the [Julia programming language](https://julialang.org/), like in C, assignment
-returns the assigned value.
+Today I realized by chance that in
+the [Julia programming language](https://julialang.org/), like in C/C++,
+assignment returns the assigned value.
 
 To be more precise, assignment returns the right-hand side of the assignment
 expression.  This doesn’t appear to be documented in the current (as of December
 2017) stable version of the manual, but
 a
 [FAQ](https://docs.julialang.org/en/latest/manual/faq/#What-is-the-return-value-of-an-assignment?-1) has
-been added to its development version.  Be aware of this subtlety, because
-sometimes you can get unexpected results if you rely on the type of the returned
-value of an assignment:
+been added to its development version.  Be aware of this subtlety, because you
+can get unexpected results if you rely on the type of the returned value of an
+assignment:
 
 ```julia
 julia> let a
@@ -58,7 +58,7 @@ variable to check its value:
 ## Using assignment as condition
 
 Another useful consequence of this feature is that you can use assignment as
-condition in, e.g., `if` and `while`, making writing them easier.  For example,
+condition in, e.g., `if` and `while`, making them more concise.  For example,
 consider this brute-force method to compute
 the [Euler’s number](https://en.wikipedia.org/wiki/E_(mathematical_constant))
 stopping when the desired precision is reached:
@@ -97,7 +97,10 @@ a [Python tutorial](https://docs.python.org/3/tutorial/datastructures.html):
 
 This is indeed an issue because in C and Python conditions can be pretty much
 anything that can be converted to plain-bit 0 and 1, including, e.g.,
-characters.  Consider the following C program:
+characters.  In addition, in Python a variable can freely change the type, so
+that
+
+Consider the following C program:
 
 ```c
 #include <stdio.h>
@@ -106,17 +109,17 @@ int main()
 {
   char a = '\0';
 
-if (a = 0)
+  if (a = 0)
     printf("True\n");
   else
     printf("False\n");
 
-if (a == 0)
+  if (a == 0)
     printf("True\n");
   else
     printf("False\n");
 
-return 0;
+  return 0;
 }
 ```
 
@@ -183,7 +186,7 @@ error, but this is also an unlikely situation.  The Julia style guide suggests
 to
 [not parenthesize conditions](https://docs.julialang.org/en/stable/manual/style-guide/#Don%27t-parenthesize-conditions-1).
 Following this recommendation is a good way to catch the error in this case
-because the assignment requires the parens:
+because the assignment requires parens:
 
 ```julia
 julia> if a = b
