@@ -63,12 +63,10 @@ function Σ(n, j)
     end
     # Compute the infinite sum
     num = 1 / 16
-    frac = num / denom
-    while frac > eps(s)
+	while (frac = num / denom) > eps(s)
         s     += frac
         num   /= 16
         denom += 8
-        frac   = num / denom
     end
     return fpart(s)
 end
