@@ -97,8 +97,7 @@ a [Python tutorial](https://docs.python.org/3/tutorial/datastructures.html):
 
 This is indeed an issue because in C and Python conditions can be pretty much
 anything that can be converted to plain-bit 0 and 1, including, e.g.,
-characters.  In addition, in Python a variable can freely change the type, so
-that
+characters.
 
 Consider the following C program:
 
@@ -134,7 +133,8 @@ Mistyping the condition (`=` instead of `==` or vice-versa) in this language can
 lead to unexpected results.
 
 Instead, this is mostly a non-issue in Julia because conditions can only be
-instances of `Bool` type.  One way to make an error in Julia is the following:
+instances of `Bool` type.  Therefore, problems may arise only when dealing with
+`Bool` objects.  One way to make an error in Julia is the following:
 
 ```julia
 julia> a = false
