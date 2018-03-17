@@ -1,7 +1,7 @@
 ---
 layout: post
 title: AstroImages.jl: package for visualization of astronomical images
-tags: [draft, julia, astronomy, visualization, plotting]
+tags: draft julia juliaastro astroimages astronomy visualization plotting
 ---
 
 In the last days I worked on a very little
