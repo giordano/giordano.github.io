@@ -1,7 +1,7 @@
 ---
 layout: post
 title: AstroImages.jl: package for visualization of astronomical images
-tags: draft julia juliaastro astroimages astronomy visualization plotting
+tags: [julia, juliaastro, astroimages, astronomy, visualization, plotting]
 ---
 
 In the last days I worked on a very little
@@ -76,14 +76,14 @@ AstroImages.AstroImage{UInt16,ColorTypes.Gray}[...]
 
 will read the first extension from the `file.fits`.
 
-If you are working in a Jupyter notebook, an AstroImage object is automatically
-rendered as a PNG image:
+If you are working in a [Jupyter notebook](https://jupyter.org/), an
+`AstroImage` object is automatically rendered as a PNG image:
 
 [![AstroImage in Jupyter](/img/astroimages1.png)](/img/astroimages1.png)
 
 ### Plotting an `AstroImage`
 
-An `AstroImage` object can be plotted with `Plots.jl` package. Just use
+An `AstroImage` object can be plotted with the `Plots.jl` package. Just use
 
 ```julia
 julia> using Plots
