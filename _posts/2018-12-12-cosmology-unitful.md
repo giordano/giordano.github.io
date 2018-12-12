@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Cosmology.jl now integrates Unitful.jl
-tags: [draft, julia, juliaastro, cosmology, unitful, measurements]
+tags: [julia, juliaastro, cosmology, unitful, measurements]
 ---
 
 [`Cosmology.jl`](https://github.com/JuliaAstro/Cosmology.jl) is the
@@ -27,9 +27,10 @@ pkg> add Cosmology
 A few days ago version
 [`v0.5.0`](https://github.com/JuliaAstro/Cosmology.jl/releases/tag/v0.5.0) has
 been released.  The main new feature is the long-awaited integration with
-[`Unitful.jl`](https://github.com/ajkeller34/Unitful.jl).  This means that the
-functions defined in this package now return a number with proper physical
-units.  For example:
+[`Unitful.jl`](https://github.com/ajkeller34/Unitful.jl) and
+[`UnitfulAstro.jl`](https://github.com/JuliaAstro/UnitfulAstro.jl).  This means
+that the functions defined in this package now return a number with proper
+physical units.  For example:
 
 ```julia
 julia> using Cosmology
@@ -65,13 +66,23 @@ julia> comoving_radial_dist(u"ly", c, 0.6)
 ## Integration with Measurements.jl
 
 `Cosmology.jl` is one of the several examples of how easy is in Julia to combine
-together structures from different and independent packages.  In fact, besides
-having numbers with physical units, we can use numbers with uncertainties (from
-[`Measurements.jl`](https://github.com/JuliaPhysics/Measurements.jl)) as
-parameters of cosmological models or for the redshift.  This enable use to
-propagate the uncertainties through the operations performed by `Cosmology.jl`.
-This feature comes for free, there is no code in `Cosmology.jl` nor in
-`Measurements.jl` to make all this work.
+together structures from different and independent packages.  Thanks to Julia’s
+type system:
+
+* the data structure used in this package to represent a cosmological model and
+  the units data structure in `Unitful.jl` don’t know anything about each other
+  (in `Cosmology.jl` the numbers are just multiplied by the appropriate unit, in
+  the most natural way possible),
+* units in `Unitful` and the `Measurement` structure in
+  [`Measurements.jl`](https://github.com/JuliaPhysics/Measurements.jl) don’t
+  know anything about each other,
+* by now you can already tell that `Measurement` and the data structure for
+  cosmological models don’t know anything about each other,
+
+yet, we can use numbers with uncertainties as parameters of cosmological models
+or for the redshift.  This enable use to propagate the uncertainties through the
+operations performed by `Cosmology.jl` getting the results with the appropriate
+physical units.
 
 As an example, we can define a cosmological model using the parameters
 [determined](https://arxiv.org/abs/1502.01589) by the [Planck
@@ -84,11 +95,14 @@ julia> planck2015 = cosmology(h=0.6774±0.0046, OmegaM=0.3089±0.0062, Tcmb=2.71
 Cosmology.FlatLCDM{Measurement{Float64}}(0.6774 ± 0.0046, 0.6910099044166828 ± 0.006200002032729847, 0.3089 ± 0.0062, 9.009558331733912e-5 ± 5.020543222494152e-6)
 ```
 
-Now we calculate the comoving volume at redshift 3.6:
+Now we calculate the comoving volume at redshift z = 3.62±0.04:
 
 ```julia
-julia> cv = comoving_volume(planck2015, 3.6)
-1461.0828166268652 ± 40.378303844048226 Gpc^3
+julia> z = 3.62 ± 0.04
+3.62 ± 0.04
+
+julia> cv = comoving_volume(planck2015, z)
+1471.004984671155 ± 45.25029615715926 Gpc^3
 ```
 
 `Measurements.jl` provides a utility,
@@ -97,25 +111,26 @@ to determine the contribution to the total uncertainty of a quantity:
 
 ```julia
 julia> Measurements.uncertainty_components(cv.val)
-Dict{Tuple{Float64,Float64,UInt64},Float64} with 4 entries:
-  (3.04, 0.33, 0x0000000000000005)     => 0.0494192
-  (0.3089, 0.0062, 0x0000000000000003) => 27.3009
-  (0.6774, 0.0046, 0x0000000000000002) => 29.7501
-  (2.718, 0.021, 0x0000000000000004)   => 0.0344486
+Dict{Tuple{Float64,Float64,UInt64},Float64} with 5 entries:
+  (3.04, 0.33, 0x0000000000000005)     => 0.0499315
+  (0.3089, 0.0062, 0x0000000000000003) => 27.5208
+  (3.62, 0.04, 0x0000000000000006)     => 19.8259
+  (0.6774, 0.0046, 0x0000000000000002) => 29.952
+  (2.718, 0.021, 0x0000000000000004)   => 0.0348057
 ```
 
 This means that the major contributions to the uncertainty of `cv` comes from
 the Hubble parameter (`0.6774±0.0046`) and the matter density (`0.3089±0.0062`).
 
 We can also compute, in this cosmological model, the age of the Universe today
-and at a certain redshift in the past:
+and at redshift z:
 
 ```julia
 julia> age(planck2015, 0) # Age of the Universe today
 13.79748128449975 ± 0.12164948254546123 Gyr
 
 julia> age(planck2015, 42) # Age of the Universe at redshift z = 1.42
-4.481579852131797 ± 0.05168067053818648 Gyr
+1.7337397190605572 ± 0.03053416280033588 Gyr
 ```
 
 `lookback_time` gives the difference between age at redshift 0 and age at
@@ -123,7 +138,7 @@ redshift z:
 
 ```julia
 julia> lookback_time(planck2015, 1.42)
-9.315901432385681 ± 0.07270835053850357 Gyr
+12.063741565462488 ± 0.10426342852851997 Gyr
 ```
 
 Note that uncertainties are always propagated taking care of the correlation
@@ -134,7 +149,7 @@ calculations:
 
 ```julia
 julia> lookback_time(planck2015, 1.42) + age(planck2015, 1.42)
-13.797481284517477 ± 0.12164948254345108 Gyr
+13.797481284523045 ± 0.12164948254269693 Gyr
 ```
 
 <!-- Local Variables: -->
