@@ -123,14 +123,14 @@ This means that the major contributions to the uncertainty of `cv` comes from
 the Hubble parameter (`0.6774±0.0046`) and the matter density (`0.3089±0.0062`).
 
 We can also compute, in this cosmological model, the age of the Universe today
-and at redshift z:
+and at redshift z = 1.42:
 
 ```julia
 julia> age(planck2015, 0) # Age of the Universe today
 13.79748128449975 ± 0.12164948254546123 Gyr
 
-julia> age(planck2015, 42) # Age of the Universe at redshift z = 1.42
-1.7337397190605572 ± 0.03053416280033588 Gyr
+julia> age(planck2015, 1.42) # Age of the Universe at redshift z = 1.42
+4.481579852131797 ± 0.05168067053818648 Gyr
 ```
 
 `lookback_time` gives the difference between age at redshift 0 and age at
@@ -138,7 +138,7 @@ redshift z:
 
 ```julia
 julia> lookback_time(planck2015, 1.42)
-12.063741565462488 ± 0.10426342852851997 Gyr
+9.315901432385681 ± 0.07270835053850357 Gyr
 ```
 
 Note that uncertainties are always propagated taking care of the correlation
@@ -149,7 +149,7 @@ calculations:
 
 ```julia
 julia> lookback_time(planck2015, 1.42) + age(planck2015, 1.42)
-13.797481284523045 ± 0.12164948254269693 Gyr
+13.797481284517477 ± 0.12164948254345108 Gyr
 ```
 
 <!-- Local Variables: -->
