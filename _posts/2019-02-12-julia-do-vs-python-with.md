@@ -4,10 +4,14 @@ title: Julia do-block vs Python with statement
 tags: [julia, python, control flow, draft]
 ---
 
+I’ve recently started coding in Python more than I’ve used to, and it’s
+interesting for me to have a closer look to its features and compare them with
+similar Julia’s ones.
+
 The `do`-block in the Julia programming language and the `with` statement in
 Python can appear to be similar because of some common uses (most notably,
 opening a stream and automatically closing it at the end), but are fundamentally
-different.  Here we will review their purposes.
+different.  In this post I will review them.
 
 ## `with` statement in Python
 
@@ -20,7 +24,7 @@ statements](https://docs.python.org/3/reference/compound_stmts.html#try).
 
 A good explanation of this feature is given at
 <http://effbot.org/zone/python-with-statement.htm>.  In general, you can use
-`try`/`finally` to handle unmanaged resources like stream:
+`try`/`finally` to handle unmanaged resources like streams:
 
 ```python
 def controlled_execution(callback):
@@ -94,7 +98,7 @@ with MyOpen('file.txt') as f:
 The
 [`do`-block](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments-1)
 in Julia aims to address a different problem: write in a different way the
-passing a function as argument to another function.
+passing of a function as argument to another function.
 
 In a simple way, any function `func` accepting a function as first argument:
 
@@ -214,12 +218,13 @@ the function `f`.
 
 The `with` statement in Python is a syntactic sugar for `try`/`finally`.  This
 construct is bound to classes, this means that the `__enter__`/`__exit__`
-methods are bound to a specific class and they can be defined only once, so you
-can't have multiple `__enter__`/`__exit__` handlers for the same class, or
-independently from a class.  In order for the `with` statement to work, both
-`__enter__` and `__exit__` must be defined in any case, however if you don't
-really need the `try`/`finally` construct you can still take advantage of the
-handy `with` syntax, for example by making the `__exit__` method dummy.
+methods are bound to a specific class and they can be defined only once as they
+have a fixed signature, so you can't have multiple `__enter__`/`__exit__`
+handlers within the same class, or independently from a class.  In order for the
+`with` statement to work, both `__enter__` and `__exit__` must be defined in any
+case, however if you don't really need the `try`/`finally` construct you can
+still take advantage of the handy `with` syntax, for example by making the
+`__exit__` method dummy.
 
 The `do`-block in Julia is not bound to any type, the only condition to use it
 is to have a function taking a function as first argument.  The function may
