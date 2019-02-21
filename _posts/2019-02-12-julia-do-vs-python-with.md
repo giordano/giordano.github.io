@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Julia do-block vs Python with statement
-tags: [julia, python, control flow, draft]
+tags: [julia, python, control flow]
 ---
 
 I’ve recently started coding in Python more than I’ve used to, and it’s
@@ -97,8 +97,8 @@ with MyOpen('file.txt') as f:
 
 The
 [`do`-block](https://docs.julialang.org/en/v1/manual/functions/#Do-Block-Syntax-for-Function-Arguments-1)
-in Julia aims to address a different problem: write in a different way the
-passing of a function as argument to another function.
+in Julia addresses a different problem: write in a different way the passing of
+a function as argument to another function.
 
 In a simple way, any function `func` accepting a function as first argument:
 
@@ -113,15 +113,15 @@ can be called as
 ```julia
 func(x, y, z...) do args
     # put here the body of function f(args) that will
-    # will be passed as first argument to func
+    # be passed as first argument to func(f, x, y, z...)
 end
 ```
 
 For example, the
 [`filter`](https://docs.julialang.org/en/v1/base/collections/#Base.filter)
 enables filtering a collection by removing those elements for which the provided
-function returns `false`.  For example, we can select the odd numbers between 1
-and 100 divisible by 3 with
+function returns `false`.  We can select the odd numbers between 1 and 100
+divisible by 3 with
 
 ```julia
 julia> filter(x -> isinteger(x/3) && isodd(x), 1:100)
