@@ -3,6 +3,20 @@ layout: page
 title: About me
 ---
 
+## Today
+
+I enjoy my days writing software at [University College
+London](https://www.ucl.ac.uk), UK, as a member of the [Research Software
+Development
+Group](https://www.ucl.ac.uk/isd/services/research-it/research-software).
+
+Besides this, I am an active contributor to many [free and open-source
+software](https://en.wikipedia.org/wiki/Free_and_open-source_software), mainly
+oriented to scientific computing and written in [Julia](https://julialang.org/).
+I am also co-maintainer of [GNU AUCTeX](https://www.gnu.org/software/auctex/).
+
+## Education and Past Experiences
+
 During my PhD in Physics at [University of Salento](https://www.unisalento.it/),
 Italy, I studied [exoplanets](https://en.wikipedia.org/wiki/Exoplanet) with the
 method of [gravitational
@@ -14,18 +28,12 @@ experiment](https://en.wikipedia.org/wiki/Germanium_Detector_Array). I then had
 a short but intense experience working in industry as software consultant for a
 company in the defence sector.
 
-Now, I enjoy my days writing software at [University College
-London](https://www.ucl.ac.uk), UK, as a member of the [Research Software
-Development
-Group](https://www.ucl.ac.uk/isd/services/research-it/research-software).
-Besides this, I am an active contributor to many free and open-source projects,
-mainly related to scientific computing and written in
-[Julia](https://julialang.org/).  I am also co-maintainer of [GNU
-AUCTeX](https://www.gnu.org/software/auctex/).
+## Social Networks
 
 You can find me on:
 
-* GitHub: https://github.com/giordano
-* Twitter: https://twitter.com/MoseGiordano
-* LinkedIn: https://linkedin.com/in/mose-giordano
-* StackOverflow: https://stackoverflow.com/users/2442087/giordano
+* GitHub: <https://github.com/giordano>
+* Twitter: <https://twitter.com/MoseGiordano>
+* LinkedIn: <https://linkedin.com/in/mose-giordano>
+* StackOverflow: <https://stackoverflow.com/users/2442087/giordano>
+* ORCID: <https://orcid.org/0000-0002-7218-2873>
