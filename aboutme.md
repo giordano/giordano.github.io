@@ -25,15 +25,15 @@ that, I got a Postdoctoral position at [University of
 L’Aquila](https://en.wikipedia.org/wiki/University_of_L%27Aquila), Italy,
 working on the [GERDA Particle Physics
 experiment](https://en.wikipedia.org/wiki/Germanium_Detector_Array). I then had
-a short but intense experience working in industry as software consultant for a
-company in the defence sector.
+a short but intense experience working in industry as software engineer
+consultant for a company in the defence sector.
 
 ## Social Networks
 
 You can find me on:
 
-* GitHub: <https://github.com/giordano>
-* Twitter: <https://twitter.com/MoseGiordano>
-* LinkedIn: <https://linkedin.com/in/mose-giordano>
-* StackOverflow: <https://stackoverflow.com/users/2442087/giordano>
-* ORCID: <https://orcid.org/0000-0002-7218-2873>
+* [GitHub](https://github.com/giordano)
+* [Twitter](https://twitter.com/MoseGiordano)
+* [LinkedIn](https://linkedin.com/in/mose-giordano)
+* [StackOverflow](https://stackoverflow.com/users/2442087/giordano)
+* [ORCID](https://orcid.org/0000-0002-7218-2873)
