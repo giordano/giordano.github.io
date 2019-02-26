@@ -6,7 +6,7 @@ tags: [julia, game, multiple dispatch]
 
 [Rock–paper–scissors](https://en.wikipedia.org/wiki/Rock%E2%80%93paper%E2%80%93scissors) is
 a popular hand game.  However, some nerds may prefer playing this game on their
-computer rather than actually moving their hands.
+computer rather than actually shaking their hands.
 
 [![Rock–paper–scissors rules](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Rock-paper-scissors.svg/803px-Rock-paper-scissors.svg.png)](https://en.wikipedia.org/wiki/File:Rock-paper-scissors.svg)
 
@@ -16,7 +16,7 @@ We can write this game in less than 10 lines of code in
 the [Julia programming language](https://julialang.org/).  This implementation
 will offer the opportunity to have a closer look to one of Julia’s main
 features:
-[multiple dispatch](https://docs.julialang.org/en/stable/manual/methods/#Methods-1).
+[multiple dispatch](https://docs.julialang.org/en/v1/manual/methods/#Methods-1).
 
 ## The game
 
@@ -48,7 +48,7 @@ abstract type Shape end
 
 defines `Shape` as
 an
-[abstract type](https://docs.julialang.org/en/stable/manual/types/#Abstract-Types-1).
+[abstract type](https://docs.julialang.org/en/v1/manual/types/#Abstract-Types-1).
 This will be the parent of the concrete types `Rock`, `Paper` and `Scissors`
 that represent the characters of the game.  To be fair, it’s not necessary to
 create the `Shape` abstract type (so they would be eight lines in total!), but
@@ -64,7 +64,7 @@ struct Scissors <: Shape end
 
 Here the concrete shapes are defined
 as
-[composite types](https://docs.julialang.org/en/stable/manual/types/#Composite-Types-1),
+[composite types](https://docs.julialang.org/en/v1/manual/types/#Composite-Types-1),
 subtypes of `Shape` (indicated by the `<:` sign).  They don’t actually contain
 anything, but that’s OK, we just want to define the elements of the game as
 types in order to take advantage of Julia’s type system.
@@ -77,7 +77,7 @@ play(::Type{Rock},  ::Type{Scissors}) = "Rock wins"
 
 These are the basic rules of the game.  We’ve defined
 three
-[methods](https://docs.julialang.org/en/stable/manual/methods/#Defining-Methods-1) for
+[methods](https://docs.julialang.org/en/v1/manual/methods/#Defining-Methods-1) for
 the `play` function, which return a string indicating the winning shape.  The
 two arguments of these methods are two shapes, for instance `Rock` and
 `Scissors`.  If you look carefully to the definitions, we omitted the names of
@@ -124,7 +124,7 @@ this, but think about your CPU-intensive application.
 
 Now that we’ve implemented the game we can play it in the
 Julia
-[REPL](https://docs.julialang.org/en/stable/manual/interacting-with-julia/#Interacting-With-Julia-1):
+[REPL](https://docs.julialang.org/en/v1/stdlib/REPL/#The-Julia-REPL-1):
 
 ```julia
 julia> abstract type Shape end
@@ -166,16 +166,16 @@ play(a::Type{#s1} where #s1<:Shape, b::Type{#s2} where #s2<:Shape) in Main at RE
 There was no explicit method for the combination of arguments `Rock`-`Paper`,
 but the commutative rule has been used here, as confirmed by the
 `@which`
-[macro](https://docs.julialang.org/en/stable/manual/metaprogramming/#man-macros-1).
+[macro](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros-1).
 
 ### Play randomly
 
 We can also add some randomness to the game.
 The
-[`rand`](https://docs.julialang.org/en/stable/stdlib/numbers/#Base.Random.rand)
+[`rand`](https://docs.julialang.org/en/v1/stdlib/Random/#Base.rand)
 function can pick up a random element from a given collection.  Luckily,
 the
-[`subtypes`](https://docs.julialang.org/en/stable/stdlib/base/#Base.subtypes)
+[`subtypes`](https://docs.julialang.org/en/v1/stdlib/InteractiveUtils/#InteractiveUtils.subtypes)
 function returns the array with all the subtypes of the given abstract type:
 
 ```julia

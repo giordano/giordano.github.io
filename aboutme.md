@@ -28,7 +28,7 @@ experiment](https://en.wikipedia.org/wiki/Germanium_Detector_Array). I then had
 a short but intense experience working in industry as software engineer
 consultant for a company in the defence sector.
 
-## Social Networks
+## Online Presence
 
 You can find me on:
 
