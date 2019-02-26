@@ -265,6 +265,95 @@ julia> play(Well, Well)
 "Tie, try again"
 ```
 
+## Extra Bonus (added on 2019-02-26)
+
+The main goal of this post is to show how multiple dispatch enables writing
+generic and extensible code in a few lines.  [Mason
+Protter](https://github.com/MasonProtter) showed that we can get a fancier and
+more informative output by writing some more code:
+
+```julia
+abstract type Shape end
+struct Rock     <: Shape end
+struct Paper    <: Shape end
+struct Scissors <: Shape end
+
+const rock     = Rock()
+const paper    = Paper()
+const scissors = Scissors()
+
+Base.show(io::IO, ::Rock)     = print(io, "rock")
+Base.show(io::IO, ::Paper)    = print(io, "paper")
+Base.show(io::IO, ::Scissors) = print(io, "scissors")
+
+@enum Player Tie=0 One=1 Two=2
+struct Winner
+    player::Player
+    shape::Shape
+end
+
+function Base.show(io::IO, w::Winner)
+    if w.player == Tie
+        str = print(io, "Players tied with $(w.shape)")
+    else
+        str = print(io, "Player $(w.player) wins with $(w.shape)!")
+    end
+end
+
+function Base.adjoint(w::Winner)
+    if w.player == Tie
+        w
+    elseif w.player == One
+        Winner(Two, w.shape)
+    else
+        Winner(One, w.shape)
+    end
+end
+
+play(::Paper, ::Rock)     = Winner(One, paper)
+play(::Paper, ::Scissors) = Winner(Two, scissors)
+play(::Rock,  ::Scissors) = Winner(One, rock)
+play(a::T,    ::T) where {T<:Shape} = Winner(Tie, a)
+play(a::T1,  b::T2) where {T1<:Shape,T2<:Shape} = (play(b, a))' # Anticommutivity of winning players
+
+instanceof(x::Type) = x.instance
+Base.rand(::Type{Shape}) = rand(instanceof.(subtypes(Shape)))
+
+function playrand(verbose=true)
+    s1 = rand(Shape); s2 = rand(Shape)
+    verbose && println("Player 1 chooses $s1, player 2 chooses $s2")
+    play(s1, s2)
+end
+```
+
+Now we can play in the REPL with the single `playrand()` command:
+
+```julia
+julia> playrand()
+Player 1 chooses scissors, player 2 chooses rock
+Player Two wins with rock!
+
+julia> playrand()
+Player 1 chooses scissors, player 2 chooses scissors
+Players tied with scissors
+
+julia> playrand()
+Player 1 chooses scissors, player 2 chooses paper
+Player One wins with scissors!
+
+julia> playrand()
+Player 1 chooses scissors, player 2 chooses scissors
+Players tied with scissors
+
+julia> playrand()
+Player 1 chooses paper, player 2 chooses rock
+Player One wins with paper!
+
+julia> playrand()
+Player 1 chooses paper, player 2 chooses scissors
+Player Two wins with scissors!
+```
+
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "american" -->
 <!-- End: -->
