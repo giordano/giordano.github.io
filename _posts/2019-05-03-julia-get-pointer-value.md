@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Getting the value of a pointer in Julia
-tags: [julia, draft, pointers, c]
+tags: [julia, pointers, c]
 ---
 
 Yesterday a question in the [Julia’s Slack
@@ -73,6 +73,9 @@ julia> function Base.show(io::IO, t::Ctm)
                  lpad(t.min, 2, "0"), ":", lpad(t.sec, 2, "0"))
        end
 ```
+
+We are now going to use `unsafe_load` to copy the result of the call to
+`localtime` into an instance of the `Ctm` structure:
 
 ```julia
 julia> localtime = ccall((:localtime, "libc.so.6"), Ptr{Ctm}, (Ptr{Int64},), result)
@@ -193,8 +196,8 @@ from Julia with C programs.
 
 ## Special bonus
 
-If you feel really bold and creative, you can even overload the `*` operator to
-do *very* weird things like:
+If you feel really bold and creative, you can even abuse the `*` operator to do
+*very* weird things like:
 
 ```julia
 julia> Base.:*(ptr::Ptr) = dereference(ptr)
@@ -212,8 +215,9 @@ Bar(0x55139e3fd61e43a4)
 ```
 
 However, the `*` operator shouldn’t be really used to mock C syntax is an
-awkward way (we’re not actually dereferencing!), so don’t tell people that I
-told you to use this!
+awkward way (we’re not actually dereferencing and the syntax `Foo *ptr` is for
+declaration of a pointer rather than actual dereferencing), so don’t tell people
+that I told you to use this!
 
 <!-- Local Variables: --> 
 <!-- ispell-local-dictionary: "british" --> 
