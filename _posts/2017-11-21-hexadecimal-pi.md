@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Computing the hexadecimal value of pi
-tags: julia math pi
+tags: julia maths pi
 ---
 
 The

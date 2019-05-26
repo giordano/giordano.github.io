@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "A case for multiple dispatch: complex division"
-tags: [julia, draft, multiple dispatch, math]
+tags: [julia, multiple dispatch, maths]
 ---
 
 Multiple dispatch is the ability to dispatch a function based on the number and
