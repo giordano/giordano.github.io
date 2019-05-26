@@ -25,8 +25,6 @@ documentation](https://docs.julialang.org/en/v1/manual/methods/):
 > multiple dispatch ends up being a powerful and convenient paradigm for
 > structuring and organizing programs.
 
-## Comparison between languages
-
 An interesting example of how multiple dispatch allows one to more easily write
 mathematically correct code is the division involving complex numbers.  In
 particular, the corner case of division by 0.  But... is the 0 real or complex?
@@ -44,6 +42,8 @@ the complex plane is not well-defined, and so the result of the division by a
 complex zero should be undefined.  This behaviour is also mandated by the
 [ISO/IEC 10967 standard](https://en.wikipedia.org/wiki/ISO/IEC_10967) (part 3,
 section 5.2.5.5 "Fundamental complex floating point arithmetic").
+
+## Comparison between languages
 
 Let’s see how different programming languages behave with this operation.
 
@@ -78,6 +78,22 @@ __main__:1: RuntimeWarning: invalid value encountered in true_divide
 [1] 1+0i     # Should be 1-0i
 ```
 
+### GNU Octave
+
+```matlab
+octave:1> (1.0 + 0.0*i) / 0.0
+warning: division by zero
+ans =  Inf
+octave:2> 1.0 / (0.0 + 0.0*i)
+warning: division by zero
+ans =  Inf
+octave:3> (1.0 + 0.0*i) / (0.0 + 0.0*i)
+warning: division by zero
+ans =  Inf
+octave:4> 1.0 / (1.0 + 0.0*i)
+ans =  1
+```
+
 ### C
 
 ```c
@@ -102,7 +118,7 @@ int main(void)
 #### Compiled with GCC
 
 ```
-% gcc -std=c99 test.c&&./a.out
+$ gcc -std=c99 test.c&&./a.out
 (inf,-nan) # Should be (inf,nan)
 (inf,-nan) # Should be (nan,nan)
 (inf,-nan) # Should be (nan,nan)
@@ -148,7 +164,7 @@ int main(void)
 #### Compiled with GCC
 
 ```
-% g++ test.cpp&&./a.out
+$ g++ test.cpp&&./a.out
 (inf,-nan) # Should be (inf,nan)
 (inf,-nan) # Should be (nan,nan)
 (inf,-nan) # Should be (nan,nan)
@@ -163,6 +179,42 @@ $ icc test.cpp&&./a.out
 (inf,-nan) # Should be (nan,nan)
 (inf,-nan) # Should be (nan,nan)
 (1,0)      # Should be (1,-0)
+```
+
+### Fortran90
+
+```fortran
+program main
+  implicit none
+  complex :: c_zero = (0.0, 0.0)
+  complex :: c_one  = (1.0, 0.0)
+  double precision :: f_zero = 0.0
+  double precision :: f_one  = 1.0
+  write (*, '(F0.0,"+i",F0.0,A)') c_one / f_zero,  " # Should be Inf+iNaN"
+  write (*, '(F0.0,"+i",F0.0,A)') f_one / c_zero,  " # Correct"
+  write (*, '(F0.0,"+i",F0.0,A)') c_one / c_zero,  " # Correct"
+  write (*, '(F0.0,"+i",F0.0,A)') f_one / c_one, "   # Should be 1.-i0."
+endprogram main
+```
+
+#### Compiled with Gfortran
+
+```
+$ gfortran test.f90&&./a.out
+NaN+iNaN # Should be Inf+iNaN
+NaN+iNaN # Should be NaN+iNaN
+NaN+iNaN # Should be NaN+iNaN
+1.+i0.   # Should be 1.-i0.
+```
+
+#### Compiled with ifort
+
+```
+$ ifort test.f90&&./a.out
+Inf+iNaN # Should be Inf+iNaN
+Inf+iNaN # Should be NaN+iNaN
+Inf+iNaN # Should be NaN+iNaN
+1.+i0.   # Should be 1.-i0.
 ```
 
 ### Julia
