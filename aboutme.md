@@ -5,10 +5,10 @@ title: About me
 
 ## Today
 
-I enjoy my days writing software at [University College
+I write software for researchers at [University College
 London](https://www.ucl.ac.uk), UK, as a member of the [Research Software
 Development
-Group](https://www.ucl.ac.uk/isd/services/research-it/research-software).
+Group](https://www.ucl.ac.uk/research-it-services/about-rits/people#software).
 
 Besides this, I am an active contributor to many [free and open-source
 software](https://en.wikipedia.org/wiki/Free_and_open-source_software), mainly
@@ -37,3 +37,4 @@ You can find me on:
 * [LinkedIn](https://linkedin.com/in/mose-giordano)
 * [StackOverflow](https://stackoverflow.com/users/2442087/giordano)
 * [ORCID](https://orcid.org/0000-0002-7218-2873)
+* [UCL *IRIS*](https://iris.ucl.ac.uk/iris/browse/profile?upi=MGIOR02)
