@@ -47,8 +47,8 @@ W. Dijkstra](https://en.wikipedia.org/wiki/Edsger_W._Dijkstra): ["Why numbering
 should start at
 zero"](http://www.cs.utexas.edu/users/EWD/transcriptions/EWD08xx/EWD831.html).
 However, I personally find this note unconvincing and partial, mainly based on
-subjective arguments (like elegance and ugliness) rather than practical reasons.
-That said, 0-based indexing is certainly useful in many situations.
+subjective arguments (like elegance and ugliness) rather than really compelling
+reasons.  That said, 0-based indexing is certainly useful in many situations.
 
 A good programming language, whatever indexing convention it uses, should
 provide an abstraction layer to let users forget which is the initial index.
@@ -59,11 +59,13 @@ function to reference the first element of a collection, the Julia programming
 language has different utilities to iterate over collections:
 
 * arrays are iterables, this means that you can write a `for` loop like
+
   ```julia
   for element in my_array
 	  # do things with the `element`...
   end
   ```
+
   without using indices at all
 * the [`length`](https://docs.julialang.org/en/v1/base/collections/#Base.length)
   function gives you the length of a collection, so that Dijkstra's argument
@@ -84,6 +86,81 @@ most notable application of custom indices is probably the
 [`OffsetArrays.jl`](https://github.com/JuliaArrays/OffsetArrays.jl) package.
 Other use cases of custom indices are shown in [this blog
 post](https://julialang.org/blog/2017/04/offset-arrays).
+
+## Usage
+
+Let’s come to `RandomBasedArrays.jl`.  You can install it with [Julia built-in
+package manager](https://julialang.github.io/Pkg.jl/stable/).  In a Julia
+session, after entering the package manager mode with `]`, run the command
+
+```julia
+pkg> add RandomBasedArrays
+```
+
+After that, just run `using RandomBasedArrays` in the REPL to load the package.
+It defines a new `AbstractArray` type, `RandomBasedArray`, which is a thin
+wrapper around any other `AbstractArray`.
+
+```julia
+julia> using RandomBasedArrays
+
+julia> A = RandomBasedArray(reshape(collect(1:12), 3, 4))
+3×4 Array{Int64,2}:
+ 10  2  6   6
+  8  9  1  11
+  7  8  8   7
+```
+
+Every time you access an element, you conveniently get a random element of the
+parent array, making any doubt about first index go away.  This means that you
+can use any `Int` as index, including negative numbers:
+
+```julia
+julia> A[-35]
+6
+
+julia> A[-35]
+9
+
+julia> A[-35]
+4
+```
+
+You can also set elements of the array in the usual way, just remember that
+you’ll set a random element of the parent array:
+
+```julia
+julia> A[28,-19] = 42
+42
+
+julia> A
+5×5 Array{Int64,2}:
+ 13  16   3  25   9
+ 23  20  16  18   1
+  5  17  21   6   8
+  5   3  42  10  13
+ 25   6  23   4  11
+
+julia> A
+5×5 Array{Int64,2}:
+  9  25  25   3   3
+  4  14   9   7  18
+ 22  14  13  21   2
+ 11  12  19  14  19
+ 19   2  21   2  21
+
+```
+
+## Related projects
+
+There are other Julia packages that play with different indexing of arrays, e.g.:
+
+* [`OffsetArrays.jl`](https://github.com/JuliaArrays/OffsetArrays.jl):
+  Fortran-like arrays with arbitrary, zero or negative starting indices
+* [`TwoBasedIndexing.jl`](https://github.com/simonster/TwoBasedIndexing.jl):
+  Two-based indexing (note: this is currently out-of-date and doesn’t work in
+  Julia 1.0)
+
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
