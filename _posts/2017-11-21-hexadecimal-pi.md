@@ -74,7 +74,7 @@ end
 pi_digit(n) =
     floor(Int, 16 * fpart(4Σ(n-1, 1) - 2Σ(n-1, 4) - Σ(n-1, 5) - Σ(n-1, 6)))
 
-pi_string(n) = "0x3." * join(hex.(pi_digit.(1:n))) * "p0"
+pi_string(n) = "0x3." * join(string.(pi_digit.(1:n), base = 16)) * "p0"
 {% endhighlight %}
 
 The `pi_digit` function gives the $$n$$-th hexadecimal fractional digit of
@@ -103,13 +103,12 @@ more efficient than that available in Julia standard library.
 
 ## Test results
 
-Let’s check if the function is working correctly.  We can use
-the
-[`parse`](https://docs.julialang.org/en/stable/stdlib/numbers/#Base.parse-Tuple{Type,Any,Any}) function
-to convert the string to a decimal floating point
-number.  [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754) double precision
-floating-point numbers have a 53-bit mantissa, amounting to $$53 / \log_{2}(16)
-\approx 13$$ hexadecimal digits:
+Let’s check if the function is working correctly.  We can use the
+[`parse`](https://docs.julialang.org/en/v1/base/numbers/#Base.parse) function to
+convert the string to a decimal floating point number.  [IEEE
+754](https://en.wikipedia.org/wiki/IEEE_754) double precision floating-point
+numbers have a 53-bit mantissa, amounting to $$53 / \log_{2}(16) \approx 13$$
+hexadecimal digits:
 
 ```julia
 julia> pi_string(13)
@@ -122,7 +121,7 @@ julia> Float64(π) == parse(Float64, pi_string(13))
 true
 ```
 
-[Generator expressions](https://docs.julialang.org/en/stable/manual/arrays/#Generator-Expressions-1) allow
+[Generator expressions](https://docs.julialang.org/en/v1/manual/arrays/#Generator-Expressions-1) allow
 us to obtain the decimal value of the number in a very simple way, without using
 the hexadecimal string:
 
@@ -131,11 +130,10 @@ julia> 3 + sum(pi_digit(n)/16^n for n in 1:13)
 3.141592653589793
 ```
 
-We can use
-the
-[arbitrary-precision](https://docs.julialang.org/en/stable/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1) `BigFloat`
-to check the correctness of the result for even more digits.  By default,
-`BigFloat` numbers in Julia have a 256-bit mantissa:
+We can use the
+[arbitrary-precision](https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic-1)
+`BigFloat` to check the correctness of the result for even more digits.  By
+default, `BigFloat` numbers in Julia have a 256-bit mantissa:
 
 ```
 julia> precision(BigFloat)
@@ -170,18 +168,17 @@ true
 
 Since the Bailey–Borwein–Plouffe formula extracts the $$n$$-th digit of $$\pi$$
 without computing the other ones, we can write a multi-threaded version of
-`pi_string`, taking advantage of native support
-for
-[multi-threading](https://docs.julialang.org/en/stable/manual/parallel-computing/#Multi-Threading-(Experimental)-1)
+`pi_string`, taking advantage of native support for
+[multi-threading](https://docs.julialang.org/en/v1/manual/parallel-computing/#Multi-Threading-(Experimental)-1)
 in Julia:
 
 {% highlight julia linenos %}
 function pi_string_threaded(N)
-    digits = Vector{Int}(N)
+    digits = Vector{Int}(undef, N)
     Threads.@threads for n in eachindex(digits)
         digits[n] = pi_digit(n)
     end
-    return "0x3." * join(hex.(digits)) * "p0"
+    return "0x3." * join(string.(digits, base = 16)) * "p0"
 end
 {% endhighlight %}
 
