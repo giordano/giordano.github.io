@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Random-based indexing for arrays"
-tags: [julia, array, maths, draft]
+tags: [julia, array, maths]
 ---
 
 ![image](https://imgs.xkcd.com/comics/donald_knuth.png)
@@ -9,7 +9,7 @@ tags: [julia, array, maths, draft]
 *Image credit: "[xkcd: Donald Knuth](https://xkcd.com/163/)" ([CC-BY-NC
 2.5](https://creativecommons.org/licenses/by-nc/2.5/))*
 
-Let me introduce my latest effort:
+Let me introduce a package I recently wrote:
 [`RandomBasedArrays.jl`](https://github.com/giordano/RandomBasedArrays.jl), a
 hassle-free package in the [Julia programming language](https://julialang.org/)
 for dealing with arrays.  Every time you access an element of an array, the
