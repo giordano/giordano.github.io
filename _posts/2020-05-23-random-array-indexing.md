@@ -157,6 +157,9 @@ There are other Julia packages that play with different indexing of arrays, e.g.
 
 * [`OffsetArrays.jl`](https://github.com/JuliaArrays/OffsetArrays.jl):
   Fortran-like arrays with arbitrary, zero or negative starting indices
+* [`StarWarsArrays.jl`](https://github.com/giordano/StarWarsArrays.jl): array
+  indexing based on numbering of Star Wars episode.  Also Machete order is
+  accepted
 * [`TwoBasedIndexing.jl`](https://github.com/simonster/TwoBasedIndexing.jl):
   Two-based indexing (note: this is currently out-of-date and doesn’t work in
   Julia 1.0)
