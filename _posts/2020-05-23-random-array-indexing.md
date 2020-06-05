@@ -4,11 +4,6 @@ title: "Random-based indexing for arrays"
 tags: [julia, array, maths]
 ---
 
-![image](https://imgs.xkcd.com/comics/donald_knuth.png)
-
-*Image credit: "[xkcd: Donald Knuth](https://xkcd.com/163/)" ([CC-BY-NC
-2.5](https://creativecommons.org/licenses/by-nc/2.5/))*
-
 Let me introduce a package I recently wrote:
 [`RandomBasedArrays.jl`](https://github.com/giordano/RandomBasedArrays.jl), a
 hassle-free package in the [Julia programming language](https://julialang.org/)
@@ -17,6 +12,11 @@ first index is random, so this package relieves you from having to remember
 whether Julia uses 0- or 1-based indexing: you simply cannot ever know what the
 initial element will be.  As an additional benefit, you can use any `Int` to
 index a `RandomBasedArray`.
+
+![image](https://imgs.xkcd.com/comics/donald_knuth.png)
+
+*Image credit: "[xkcd: Donald Knuth](https://xkcd.com/163/)" ([CC-BY-NC
+2.5](https://creativecommons.org/licenses/by-nc/2.5/))*
 
 ## Motivation
 
