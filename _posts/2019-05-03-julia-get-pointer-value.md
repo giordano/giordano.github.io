@@ -6,7 +6,7 @@ tags: [julia, pointers, c]
 
 Yesterday a question in the [Julia’s Slack
 channel](https://julialang.slack.com/) (request an invite
-[here](https://slackinvite.julialang.org/)!) prompted a lively discussion about
+[here](https://julialang.org/slack/)!) prompted a lively discussion about
 how to deal with pointers in Julia.  As the history of the channel is ephemeral,
 I wrote this post to keep note of some interesting points.
 
