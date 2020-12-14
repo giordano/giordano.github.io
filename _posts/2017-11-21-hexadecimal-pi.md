@@ -169,11 +169,12 @@ true
 Since the Bailey–Borwein–Plouffe formula extracts the $$n$$-th digit of $$\pi$$
 without computing the other ones, we can write a multi-threaded version of
 `pi_string`, taking advantage of native support for
-[multi-threading](https://docs.julialang.org/en/v1/manual/parallel-computing/#Multi-Threading-(Experimental)-1)
-in Julia:
+[multi-threading](https://docs.julialang.org/en/v1/manual/multi-threading/) in
+Julia.  A first naive implementation can use the
+[`Threads.@threads`](https://docs.julialang.org/en/v1/manual/multi-threading/#The-@threads-Macro):
 
 {% highlight julia linenos %}
-function pi_string_threaded(N)
+function pi_string_threads(N)
     digits = Vector{Int}(undef, N)
     Threads.@threads for n in eachindex(digits)
         digits[n] = pi_digit(n)
@@ -182,7 +183,7 @@ function pi_string_threaded(N)
 end
 {% endhighlight %}
 
-For example, running Julia with 4 threads gives a 2× speed-up:
+Running Julia with 4 threads gives a about 2× speed-up:
 
 ```julia
 julia> Threads.nthreads()
@@ -190,35 +191,83 @@ julia> Threads.nthreads()
 
 julia> using BenchmarkTools
 
-julia> pi_string(1000) == pi_string_threaded(1000)
+julia> pi_string(1000) == pi_string_threads(1000)
 true
 
 julia> @benchmark pi_string(1000)
 BenchmarkTools.Trial:
-  memory estimate:  105.28 KiB
-  allocs estimate:  2016
+  memory estimate:  105.17 KiB
+  allocs estimate:  2013
   --------------
-  minimum time:     556.228 ms (0.00% GC)
-  median time:      559.198 ms (0.00% GC)
-  mean time:        559.579 ms (0.00% GC)
-  maximum time:     564.502 ms (0.00% GC)
+  minimum time:     461.400 ms (0.00% GC)
+  median time:      463.401 ms (0.00% GC)
+  mean time:        464.136 ms (0.00% GC)
+  maximum time:     471.332 ms (0.00% GC)
   --------------
-  samples:          9
+  samples:          11
   evals/sample:     1
 
-julia> @benchmark pi_string_threaded(1000)
+julia> @benchmark pi_string_threads(1000)
 BenchmarkTools.Trial:
-  memory estimate:  113.25 KiB
-  allocs estimate:  2018
+  memory estimate:  115.06 KiB
+  allocs estimate:  2038
   --------------
-  minimum time:     270.577 ms (0.00% GC)
-  median time:      271.075 ms (0.00% GC)
-  mean time:        271.598 ms (0.00% GC)
-  maximum time:     278.350 ms (0.00% GC)
+  minimum time:     215.591 ms (0.00% GC)
+  median time:      218.030 ms (0.00% GC)
+  mean time:        219.685 ms (0.00% GC)
+  maximum time:     237.657 ms (0.00% GC)
   --------------
-  samples:          19
+  samples:          23
   evals/sample:     1
 ```
+
+`Threads.@threads` uses a static scheduler which evenly distributes the workload
+across all threads.  This is very useful when all cycles take about the same
+time, but the computational cost of `pi_digit` is $$O(n \log(n))$$, so the
+larger the value of $$n$$, the longer the function will take.  A better approach
+can be to use the task-based parallelism [introduced in Julia
+v1.3](https://julialang.org/blog/2019/07/multithreading/), and in particular the
+[`Threads.@spawn`](https://docs.julialang.org/en/v1/base/multi-threading/#Base.Threads.@spawn)
+macro:
+
+{% highlight julia linenos %}
+function pi_string_tasks(N)
+    tasks = [Threads.@spawn pi_digit(n) for n in 1:N]
+    digits = [fetch(t) for t in tasks]
+    return "0x3." * join(string.(digits, base = 16)) * "p0"
+end
+{% endhighlight %}
+
+Let's see its performance when using 4 threads:
+
+```julia
+julia> pi_string(1000) == pi_string_tasks(1000)
+true
+
+julia> @benchmark pi_string_tasks(1000)
+BenchmarkTools.Trial:
+  memory estimate:  574.30 KiB
+  allocs estimate:  8020
+  --------------
+  minimum time:     115.993 ms (0.00% GC)
+  median time:      116.872 ms (0.00% GC)
+  mean time:        117.798 ms (0.00% GC)
+  maximum time:     129.769 ms (0.00% GC)
+  --------------
+  samples:          43
+  evals/sample:     1
+```
+
+This shows a perfect 4× speed-up.
+
+If you want to know more about data parallelism models in Julia I recommend
+
+* [The Basics of Single Node Parallel
+  Computing](https://mitmath.github.io/18337/lecture5/parallelism_overview.html)
+  by Chris Rackauckas ([lecture](https://www.youtube.com/watch?v=eca6kcFntiE));
+* [A quick introduction to data parallelism in
+  Julia](https://juliafolds.github.io/data-parallelism/tutorials/quick-introduction/),
+  by Takafumi Arakaki.
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "american" -->
