@@ -92,7 +92,7 @@ package:
 * does it use Azure Pipelines?
 * does it use GitLab Pipeline?
 
-## Report of the analysis on 2021
+## Report of the analysis on 2021-01-23
 
 Before summarising my findings, I saved the [results of the
 analysis](https://github.com/giordano/AnalyzeRegistry.jl/releases/download/report-2021-01-23/report-2021-01-23.jld2)
@@ -128,16 +128,30 @@ registry](https://github.com/JuliaRegistries/General/commit/824e39a809b2932f0298
 
 ## Comments
 
+* The [General registry](https://github.com/JuliaRegistries/General) _is not_ a
+  curated list of Julia packages and at the moment there is no requirement to
+  have documentation, nor testing, nor continuous integration to be accepted.
+  The question here is: do Julia users apply these principles even if they
+  aren't mandatory?
 * The results are biased by the criteria I've chosen to determine whether a
   package "has documentation", or "has tests" and should be taken _cum grano
   salis_: these criteria aren't bullet-proof, also an empty `test/runtests.jl`
-  would count as "has tests", but see below;
-* remember that the [General
-  registry](https://github.com/JuliaRegistries/General) _is not_ a curated list
-  of Julia packages and at the moment there is no requirement to have
-  documentation, nor testing nor continuous integration to be accepted;
-* about 44% of packages are set up to use `Documenter.jl` to publish
-  documentation.  While this fraction doesn't look particularly high, consider
+  would count as "has tests", but see below.  If you change the criteria a bit
+  you may find different numbers, but I hope I got the orders of magnitude
+  right;
+* the goal of this analysis was _not_ to measure the goodness of documentation
+  or testing, but rather to see whether users apply these principles at all.
+  It's also very difficult to accurately measure them.  [Line code
+  coverage](https://en.wikipedia.org/wiki/Code_coverage) is often used to
+  measure degree of testing of the code, but I don't think it's says the whole
+  story: it's often easy to have 100% _lines_ coverage, but have a poor _paths_
+  coverage (if you have many conditionals, loops, etc... you can hit the same
+  lines from different directions), also, in very elaborated code-bases it may
+  be good enough to have high coverage of the core of the software, while some
+  other extra features may be less important to test, or may be too complicated
+  to test because require sophisticated external setups;
+* **about 44% of packages are set up to use `Documenter.jl` to publish
+  documentation**.  While this fraction doesn't look particularly high, consider
   that many packages don't keep the documentation within the repository but it
   may be stored somewhere else (very notable examples are
   [`DifferentialEquations.jl`](https://github.com/SciML/DifferentialEquations.jl)
@@ -153,40 +167,47 @@ registry](https://github.com/JuliaRegistries/General/commit/824e39a809b2932f0298
 	* all the others had documentation in the `README`, in the wiki, or anyway
       published on a different website.
 
-  So, about 6 packages out of 43 (14%) had a _very_ poor or completely missing
-  meaningful documentation for users.  Assuming this was a representative
-  sample, my conclusion is that about 8% of packages in the registry have a
-  lacking documentation, while the rest have some documentation to get users
-  started, and a bit less than half of the total are set up to use
-  `Documenter.jl` to publish documentation;
+  To summarise, 6 packages out of 43 (14%) had a _very_ poor or completely
+  missing meaningful documentation for users.  Assuming this was a
+  representative sample, my conclusion is that about 8% of packages in the
+  registry have a lacking documentation, while the **rest of the packages (92%)
+  have some documentation to get users started**, and a bit less than half of
+  the total are set up to use `Documenter.jl` to publish documentation;
 * an overwhelming majority of packages, 96.5%, have tests!
-  * I looked at a random sample of 43 packages "with tests", to check whether
-	they actually have tests: only two of them (4.7%) had a dummy
-	`test/runtests.jl` file.  If this sample was representative of all Julia
-	packages in the General registry, we can say that about 92% of Julia
-	packages do test their code.  Interestingly enough, this is about the same
-	fraction of packages with some documentation;
-* almost all packages with testing also set up continuous integration, even
-  though a small fraction is probably running dummy tests.  If compared to the
-  about 80% of papers in JOSS found by Jamie not to have any obvious CI setup,
-  the uptake of CI among Julia packages is remarkable (the audience of authors
-  of JOSS paper and Julia packages has a large overlap, so I believe it makes
-  sense to look at them together);
+  * packages like the above mentioned `PkgTemplates.jl` and `PkgSkeleton.jl`
+	creates for you a `test/runtests.jl` file when you generate a new package,
+	but this script doesn't actually contain any test at all, or just a dummy
+	assertion like `@test 1 == 1`.  I looked at a random sample of 43 packages
+	"with tests", to check whether they actually run some real tests, related to
+	package: only two of them (4.7%) had a dummy `test/runtests.jl` file.  As
+	already explained above, here I'm not judging the goodness of the tests or
+	whether they cover enough code of the package, but most of the packages I've
+	seen had very extensive test suites.  If the sample I analysed was
+	representative of all Julia packages in the General registry, we can say
+	that **about 92% of Julia packages do test their code**.  Interestingly
+	enough, this is about the same fraction of packages with some documentation;
+* **almost all packages with testing also set up continuous integration
+  (95.8%)**, even though a small fraction is probably running dummy tests.  If
+  compared to the about 80% of papers in JOSS found by Jamie not to have any
+  obvious CI setup, the uptake of CI among Julia packages is remarkable (the
+  audience of authors of JOSS paper and Julia packages has a large overlap, so I
+  believe it makes sense to look at them together);
 * GitHub Actions is the most used CI service (75.6%), followed by Travis
   (58.6%).  Note that measuring usage of GitHub Actions for CI is tricky,
   because, differently from all the other services, there isn't a single
   standard name for the configuration script, and GitHub Actions is also often
   used for other tasks than pure CI.  For example, I didn't consider files for
-  [`CompatHelper`](https://github.com/JuliaRegistries/CompatHelper.jl/) or
+  [CompatHelper](https://github.com/JuliaRegistries/CompatHelper.jl/) or
   [TagBot](https://github.com/JuliaRegistries/TagBot).  It would have been
-  interesting to look at these statistics before November, when [the new pricing
+  interesting to look at these statistics before last November, when [the new
+  Travis pricing
   model](https://blog.travis-ci.com/2020-11-02-travis-ci-new-billing) pushed
   many open-source users away from their services.
 
 My take-away message is that despite the General registry not being curated and
-not enforcing specific styles or best practices, a large fraction of Julia
-packages do embrace documentation, testing, and continuous integration, showing
-that the ecosystem provides easy-to-use tools for these practices.
+not enforcing specific styles or best practices, **a large fraction of Julia
+packages does embrace documentation, testing, and continuous integration**,
+showing that the ecosystem provides easy-to-use tools for these practices.
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
