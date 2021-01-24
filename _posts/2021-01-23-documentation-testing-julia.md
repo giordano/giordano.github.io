@@ -129,7 +129,7 @@ registry](https://github.com/JuliaRegistries/General/commit/824e39a809b2932f0298
 ## Comments
 
 * The results are biased by the criteria I've chosen to determine whether a
-  package "has documentation", or "has tests" and should be takes _cum grano
+  package "has documentation", or "has tests" and should be taken _cum grano
   salis_: these criteria aren't bullet-proof, also an empty `test/runtests.jl`
   would count as "has tests", but see below;
 * remember that the [General
