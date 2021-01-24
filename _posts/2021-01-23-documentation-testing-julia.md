@@ -4,8 +4,6 @@ title: "Measuring the prevalence of documentation, testing and continuous integr
 tags: [julia, testing, documentation, ci, registry]
 ---
 
-## Introduction
-
 [Documentation](https://en.wikipedia.org/wiki/Software_documentation),
 [testing](https://en.wikipedia.org/wiki/Software_testing), and [continuous
 integration](https://en.wikipedia.org/wiki/Continuous_integration) (CI) are some
