@@ -7,7 +7,7 @@ tags: [julia, testing, documentation, ci, registry]
 [Documentation](https://en.wikipedia.org/wiki/Software_documentation),
 [testing](https://en.wikipedia.org/wiki/Software_testing), and [continuous
 integration](https://en.wikipedia.org/wiki/Continuous_integration) (CI) are some
-of the key ingredients to make software maintinable and reliable in the long
+of the key ingredients to make software maintainable and reliable in the long
 term.  During the first part of my (short) career in academia, when my daily
 software tools were C, Fortran and IDL, I barely knew these practices (probably
 didn't know continuous integration at all), and never applied them in practice.
