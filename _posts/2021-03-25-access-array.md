@@ -4,7 +4,7 @@ title: "What you can learn from accessing an element of an array in Julia"
 tags: [draft, julia, performance, benchmarks, array]
 ---
 
-This innocent question in the [official Slack
+This innocent question from a newcomer in the [official Slack
 workspace](https://julialang.org/slack/) of the Julia programming language
 
 > How can I extract the `Float64` element from a 1x1 `Array{Float64, 1}`?
@@ -20,7 +20,8 @@ spurred a series of more or less serious answers:
 * get the element with index 1, 1, 1, 1, 1, ...: `a[ones(Int, 100)...]` (the
   `...` operator is called
   [splatting](https://docs.julialang.org/en/v1/manual/faq/#The-two-uses-of-the-...-operator:-slurping-and-splatting))
-* get the last element with `end`: `a[end]`
+* get the last element with the special `end` index (`end` here is automatically
+  lowered to `lastindex(a)`): `a[end]`
 * get the element in the first row and last column: `a[begin, end]`
 * [reduce](https://en.wikipedia.org/wiki/Reduction_Operator) the array with the
   `sum` function: `reduce(sum, a)`
@@ -35,7 +36,7 @@ spurred a series of more or less serious answers:
   `StarWarsArray(a)[4]`
 * use the
   [`getindex`](https://docs.julialang.org/en/v1/base/collections/#Base.getindex)
-  function (the `a[n, ...]` is a synctactic sugar for `getindex(a, n, ...)`):
+  function (`a[n, ...]` is a syntactic sugar for `getindex(a, n, ...)`):
   `getindex(a, firstindex(a))`
 * get a random element from the array: `rand(a)`
 
@@ -140,10 +141,11 @@ julia> @code_native debuginfo=:none dereference_bench(x)
 This is pretty much what you'd expect from the [corresponding C
 code](https://godbolt.org/z/freGKzaof).
 
-What's remarkable is that the `StarWarsArrays.jl` package achieves about the
-same performance: accessing an element of a custom data structure using a funny
-custom indexing, and written without having performance in mind, is just as
-efficient as dereferencing a pointer.
+What's remarkable is that the
+[`StarWarsArrays.jl`](https://github.com/giordano/StarWarsArrays.jl) package
+achieves about the same performance: accessing an element of a custom data
+structure using a funny custom indexing, and written without having performance
+in mind, is just as efficient as dereferencing a pointer.
 
 However, subnanoseconds differences aren't credible: most functions that clocked
 in the range 1.3-1.6 nanoseconds have basically the same performance.  If you
@@ -153,7 +155,7 @@ other functions do [bounds
 checking](https://en.wikipedia.org/wiki/Bounds_checking), which on average lead
 to slightly larger runtime.  However, in high-performance computing you usually
 want to make sure to be within bounds at a higher level and skip bounds checks
-when accessing indivual elements.  If you're 100% sure that the element of the
+when accessing individual elements.  If you're 100% sure that the element of the
 array you want to access is within its bounds, you can use the macro
 [`@inbounds`](https://docs.julialang.org/en/v1/base/base/#Base.@inbounds) to
 skip runtime bounds checks.
@@ -234,16 +236,18 @@ julia> @code_native debuginfo=:none starwars_bench(x)
 
 ## Lessons learned
 
-* To seriously answer the question that led to this digression, I think good
-  ways to access the only element of a 1x1 array are `only(a)` (which however
-  always does a runtime check to make sure that's the only element of the array,
-  incurring a performance hit), `a[1]`, `a[begin]` `a[1, 1]`, or `a[]`
+* To seriously answer the question that led to this digression, I think the
+  first answers are all good ways to access the only element of a 1x1 array:
+  `only(a)` (which however always does a runtime check to make sure that's the
+  only element of the array, incurring a performance hit), `a[1]`, `a[begin]`
+  `a[1, 1]`, `a[]`, `first(a)`
 * Custom Julia data types are efficient!  The fact that a custom data type with
-  custom indexing like `StarWarsArray` has basically the same performance as
-  dereferencing a pointer (_exactly_ same native code when skipping all bounds
-  checks) is a testament to the power and expresiveness of the language: you can
-  write your code in a high-level form, and have it compiled down to very
-  efficient code
+  custom indexing like
+  [`StarWarsArray`](https://github.com/giordano/StarWarsArrays.jl) has basically
+  the same performance as dereferencing a pointer (_exactly_ same native code
+  when skipping all bounds checks) is a testament to the power and expresiveness
+  of the language: you can write your code in a high-level form, and have it
+  compiled down to very efficient code
 * Splatting a long array can be _bad_ for performance, both at compile- and
   run-time.  Splatting is a convenient syntax, but use it with great care,
   especially when you have many elements
@@ -263,15 +267,21 @@ julia> @code_native debuginfo=:none starwars_bench(x)
     4.770 ns (0 allocations: 0 bytes)
   0.8112313537560083
   ```
-  In the second benchmark we explicitly passed the RNG to `rand` and can see
-  that avoiding accessing the global RNG saves more than 50% of runtime.
-  Performance is still far from ideal though.  As an aside, if the collection is
-  a short tuple (<= 4 elements), we can get again the same performance as
-  derefercing a pointer:
+  In the second benchmark we explicitly passed the default RNG to `rand` and can
+  see that avoiding accessing the global RNG saves more than 50% of runtime.
+  Performance is still far from ideal though.  As an aside, drawing a random
+  element from a short tuple (<= 4 elements) is optimised, and we can get again
+  the same performance as derefercing a pointer for a 1-element tuple:
   ```julia
   julia> @btime rand($(Random.default_rng()), Ref(x)[]) setup=(x=(rand(),))
     1.369 ns (0 allocations: 0 bytes)
   0.4308805082102649
+
+  julia> @code_native debuginfo=:none rand(Random.default_rng(), (rand(),))
+          .text
+          vmovsd  (%rsi), %xmm0                   # xmm0 = mem[0],zero
+          retq
+          nopw    %cs:(%rax,%rax)
   ```
 
 <!-- Local Variables: -->
