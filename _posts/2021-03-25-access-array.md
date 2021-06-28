@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "What you can learn from accessing an element of an array in Julia"
-tags: [draft, julia, performance, benchmarks, array]
+tags: [julia, performance, benchmarks, array]
 ---
 
 This innocent question from a newcomer in the [official Slack
@@ -147,7 +147,7 @@ achieves about the same performance: accessing an element of a custom data
 structure using a funny custom indexing, and written without having performance
 in mind, is just as efficient as dereferencing a pointer.
 
-However, subnanoseconds differences aren't credible: most functions that clocked
+However, subnanosecond differences aren't credible: most functions that clocked
 in the range 1.3-1.6 nanoseconds have basically the same performance.  If you
 run the benchmarks again you'll find that their performance get more or less
 close to that of dereferencing.  The difference with dereferencing is that all
