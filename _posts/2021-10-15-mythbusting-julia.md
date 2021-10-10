@@ -83,9 +83,9 @@ it.  Julia is in the same ballpark as other compiled languages, like C, LuaJIT, 
 Fortran, there is nothing special about it.  Just like all other compiled languages, Julia
 timings don't include compilation time, to show the pure runtime performance of compiled
 code.  I agree the set of thse benchmarks is arbitrary, any set would be, it's impossible to
-cover all possible applications!  And yes, these benchmarks represent some tasks where Julia
-is likely to have decent performance, which are also tasks where people would likely want to
-use Julia.
+cover all possible applications!  Actually, these benchmarks were chosen early in Julia's
+development to guide optimisations to do in the language.  In a sense, Julia was optimised
+to make these benchmarks look good.
 
 Q: _**Well, plotting is so slow in Julia!**_
 
@@ -129,12 +129,15 @@ different memory layouts).  Julia isn't a magic wand, it's a compiler which gene
 machine code, you can likely achieve the same machine code with many other languages.  The
 difference usually lies in the amount of effort you need to put on it with the same
 experience in each language, starting a project from scratch: my _totally biased_ claim is
-that tends to favour Julia :-)
+that tends to favour Julia :-) On the other hand, if the problem you want to solve isn't
+amenable to be vectorised, note there are no performance penalties in using `for` loops in
+Julia, so in this case moving from a `for`-allergic language or package to Julia can give
+you a nice boost.
 
 If you're willing to move your code to Julia, the improvements you should expect are not
-about speed: you will work in a portable language, and get access to a wide, composable
-ecosystem of packages for numerical computing, with possibility to switch to use hardware
-accelerators (like GPUs) with minimal effort.
+necessarily about speed: you will work in a portable language, and get access to a wide,
+composable ecosystem of packages for numerical computing, with possibility to switch to use
+hardware accelerators (like GPUs) with minimal effort.
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
