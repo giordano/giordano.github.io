@@ -14,7 +14,7 @@ small script, but it took almost a couple of seconds to do very simple things...
 
 A: Right.  There are some things to keep in mind:
 
-1. Julia has a non-neglible start-up time.  It isn't that bad, it's generally on the order
+1. Julia has a non-negligible start-up time.  It isn't that bad, it's generally on the order
    of 0.4 seconds or so, but if your workflow consists on running several times very small
    scripts, you're going to pay this cost _every_ time you start Julia.  If this is a
    problem, you can either change your workflow to run a single long-running script or just
@@ -82,8 +82,8 @@ available](https://github.com/JuliaLang/Microbenchmarks), anyone can check, impr
 it.  Julia is in the same ballpark as other compiled languages, like C, LuaJIT, Rust, Go and
 Fortran, there is nothing special about it.  Just like all other compiled languages, Julia
 timings don't include compilation time, to show the pure runtime performance of compiled
-code.  I agree the set of thse benchmarks is arbitrary, any set would be, it's impossible to
-cover all possible applications!  Actually, these benchmarks were chosen early in Julia's
+code.  I agree the set of these benchmarks is arbitrary, any set would be, it's impossible
+to cover all possible applications!  Actually, these benchmarks were chosen early in Julia's
 development to guide optimisations to do in the language.  In a sense, Julia was optimised
 to make these benchmarks look good.
 
@@ -92,7 +92,7 @@ Q: _**Well, plotting is so slow in Julia!**_
 A: That's a fair point.  Honestly, plotting doesn't _have to_ be slow in Julia.  Some simple
 or low-level plotting packages are actually fairly fast.  However, one of the most popular
 packages for plotting, `Plots.jl` tends to feel slow to someone used to plotting in R or
-Python.  This happens because `Plots.jl` has an intresting interface with which you can use
+Python.  This happens because `Plots.jl` has an interesting interface with which you can use
 the same code to produce plots using different backends, but this means that some code paths
 are lazily compiled on-the-fly when a new backend is enabled, including the default one.
 This problem used to be very annoying, 2-3 years ago the first time you'd do a plot in a
@@ -104,7 +104,7 @@ more bearable than before, with the hope to see more small improvements along th
 future.  As already said, the issue can be made less tedious by restarting Julia as little
 as possible, or using a custom sysimage which includes `Plots.jl`.
 
-Q: _**I've heard claims of people getting some ridicolously large speed-ups by moving to
+Q: _**I've heard claims of people getting some ridiculously large speed-ups by moving to
 Julia, like 200x, is that true? Is that even possible?**_
 
 A: To be fair, probably the original code was not so performant, but speeding it up would
