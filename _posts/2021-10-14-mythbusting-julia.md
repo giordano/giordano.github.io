@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Mythbusting Julia speed"
-tags: [draft, julia, performance]
+tags: [julia, performance]
 ---
 
 Question: _**I read a lot on the Internet about this programming language called Julia being
@@ -41,7 +41,7 @@ A: Right.  There are some things to keep in mind:
    tips](https://docs.julialang.org/en/v1/manual/performance-tips/) for more gotchas.  While
    it seems daunting to remember all of them, it takes little practice to become familiar.
    Also, you can gradually learn them, you don't need to get everything right from the
-   beginning, you'll learn them by making mistakes ;-)
+   beginning, you can learn them the hard way ;-)
 
 To summarise, Julia gives its best in long-running sessions so that start-up and JIT
 compilation costs are paid as few as possible.  There are some tools to make it easier to
