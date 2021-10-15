@@ -58,7 +58,7 @@ restart Julia less frequently, or decrease the JIT cost:
   familiar.  In that case a solution is to start an Emacs server and connect new clients to
   it.  It isn't a surprise there is a similar tool also for Julia:
   [`DaemonMode.jl`](https://github.com/dmolina/DaemonMode.jl).  This package is very useful
-  if you insinst on a workflow based on starting Julia multiple times to run small scripts:
+  if you insist on a workflow based on starting Julia multiple times to run small scripts:
   with the server-clients model, you pay the cost of startup time only once.
 * With [`PackageCompiler.jl`](https://github.com/JuliaLang/PackageCompiler.jl) you can
   create custom sysimages.  A common use-case is to fully compile a stable package that
