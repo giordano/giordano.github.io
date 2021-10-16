@@ -29,9 +29,9 @@ A: Right.  There are some things to keep in mind:
    first time you run a function (or a method of a function, to be more precise) it needs to
    be compiled, unless its compiled version was saved in the
    [sysimage](https://en.wikipedia.org/wiki/System_image).  Again, compilation time isn't
-   that bad, usually in the order of ~0.1 seconds for most simple functions, but more
-   complicated functions can take longer.  The problem however is that this time adds up,
-   and it adds to the start-up time above.
+   that bad, it's usually no more than ~0.1 seconds (actually way less than that for most
+   functions), but more complicated functions can take longer.  The problem however is that
+   this time adds up, and it adds to the start-up time above.
 3. It's very easy to make mistakes that very... I mean _**very**_ negatively affect
    performance of Julia code.  The most common gotcha is using global variables.  Global
    variables are usually considered bad practice in many compiled languages, in Julia
@@ -52,8 +52,7 @@ restart Julia less frequently, or decrease the JIT cost:
   tool lets you seamlessly hot-reload the code and not restart Julia all the time.  Thanks
   to Julia's introspection and reflection capabilities, this works granularly and recompiles
   only the needed methods.  Note that when you do restart Julia, the package you edited will
-  be entirely recompiled anyways.  One more reason to avoid restarting Julia multiple times
-  :-)
+  be entirely recompiled anyways.  One more reason to avoid restarting Julia multiple times!
 * If you're an Emacs user, the need to restart a program as little as possible may sound
   familiar.  In that case a solution is to start an Emacs server and connect new clients to
   it.  It isn't a surprise there is a similar tool also for Julia:
@@ -91,20 +90,22 @@ Q: _**Well, plotting is so slow in Julia!**_
 
 A: That's a fair point.  Honestly, plotting doesn't _have to_ be slow in Julia.  Some simple
 or low-level plotting packages are actually fairly fast.  However, one of the most popular
-packages for plotting, `Plots.jl` tends to feel slow to someone used to plotting in R or
+packages for plotting, `Plots.jl`, tends to feel slow to someone used to plotting in R or
 Python.  This happens because `Plots.jl` has an interesting interface with which you can use
 the same code to produce plots using different backends, but this means that some code paths
 are lazily compiled on-the-fly when a new backend is enabled, including the default one.
 This problem used to be very annoying, 2-3 years ago the first time you'd do a plot in a
 Julia session (loading the `Plots.jl` package and running the `plot` command) it'd take up
 to ~20 seconds for the plot to appear, leading to the so-called "time-to-first-plot"
-problem.  The situation today is much improved, with time-to-first-plot for `Plots.jl` in
-the order of ~5 seconds on recent computers.  Definitely not as fast as you'd like, but much
-more bearable than before, with the hope to see more small improvements along the way in the
-future.  As already said, the issue can be made less tedious by restarting Julia as little
-as possible, or using a custom sysimage which includes `Plots.jl`.
+problem.  To be clear, subsequent plots in the same session are instantaneous.  The
+situation today is much improved, with time-to-first-plot for `Plots.jl` in the order of ~5
+seconds on recent computers (this time includes both loading the package and displaying the
+first plot in a session).  Definitely not as fast as you'd like, but much more bearable than
+before, with the hope to see more small improvements along the way in the future.  As
+already said, the issue can be made less tedious by restarting Julia as little as possible,
+or using a custom sysimage which includes `Plots.jl`.
 
-Q: _**I've heard claims of people getting some ridiculously large speed-ups by moving to
+Q: _**I've heard claims of people getting some ridiculously large speedups by moving to
 Julia, like 200x, is that true? Is that even possible?**_
 
 A: To be fair, probably the original code was not so performant, but speeding it up would
@@ -115,7 +116,7 @@ for all languages.  Does that make the claim false?  The fact is that Julia allo
 more easily enable optimisations that'd have been harder to achieve otherwise with the same
 amount of effort.  Isn't that the point of a language that aims to make you more productive?
 
-Q: _**Then should I expect a similar speed up by moving to Julia?**_
+Q: _**Then should I expect a similar speedup by moving to Julia?**_
 
 A: Not really!  A more accurate answer would be that it depends.  If your C/C++/Fortran code
 is already heavily optimised, maybe even with some assembly to squeeze out the last bits of
@@ -131,8 +132,8 @@ difference usually lies in the amount of effort you need to put on it with the s
 experience in each language, starting a project from scratch: my _totally biased_ claim is
 that tends to favour Julia :-) On the other hand, if the problem you want to solve isn't
 amenable to be vectorised, note there are no performance penalties in using `for` loops in
-Julia, so in this case moving from a `for`-allergic language or package to Julia can give
-you a nice boost.
+Julia, so in this case moving from a `for`-allergic language to Julia can give you a nice
+boost.
 
 If you're willing to move your code to Julia, the improvements you should expect are not
 necessarily about speed: you will work in a portable language, and get access to a wide,
