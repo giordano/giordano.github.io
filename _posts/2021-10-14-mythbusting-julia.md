@@ -118,27 +118,34 @@ amount of effort.  Isn't that the point of a language that aims to make you more
 
 Q: _**Then should I expect a similar speedup by moving to Julia?**_
 
-A: Not really!  A more accurate answer would be that it depends.  If your C/C++/Fortran code
-is already heavily optimised, maybe even with some assembly to squeeze out the last bits of
-performance, or if you have a Python+NumPy code which follows best performance practices
-(vectorised functions, no `for` loops, etc...) don't expect any sensible speedup by
-translating it to Julia, if any speedup at all.  In this case moving to Julia may not be
-even worth the effort, just to set the right expectations.  Actually, a naive literal
-translation is likely to have fairly bad performance because what's idiomatic in a language
-may not be so in a different language with different properties (for example, they may have
-different memory layouts).  Julia isn't a magic wand, it's a compiler which generates
-machine code, you can likely achieve the same machine code with many other languages.  The
-difference usually lies in the amount of effort you need to put on it with the same
-experience in each language, starting a project from scratch: my _totally biased_ claim is
-that tends to favour Julia :-) On the other hand, if the problem you want to solve isn't
-amenable to be vectorised, note there are no performance penalties in using `for` loops in
-Julia, so in this case moving from a `for`-allergic language to Julia can give you a nice
-boost.
+A: Not really!  A more accurate answer is that it depends where you are coming from.  If
+your C/C++/Fortran code is already heavily optimised, maybe even with some assembly to
+squeeze out the last bits of performance, or if you have a Python+NumPy code which follows
+best performance practices (vectorised functions, no `for` loops, etc...) don't expect any
+sensible speedup by translating it to Julia, if any speedup at all.  In this case moving to
+Julia may not be even worth the effort, just to set the right expectations.  Actually, a
+naive literal translation is likely to have fairly bad performance because what's idiomatic
+in a language may not be so in a different language with different properties (for example,
+they may have different memory layouts).  Julia isn't a magic wand, it's a compiler which
+generates machine code, you can likely achieve the same machine code with many other
+languages.  The difference usually lies in the amount of effort you need to put on it with
+the same experience in each language, starting a project from scratch: my _totally biased_
+claim is that that tends to favour Julia :-)
+
+On the other hand, depending on what's the framework you're currently using, there are cases
+where Julia can really help a lot.  For instance, there are no performance penalties in
+using `for` loops in Julia.  If the problem you want to solve isn't amenable to be
+vectorised, or you just want to be able to write a `for` loop because it's more natural,
+then in this case moving from a `for`-allergic language to Julia can give you a nice boost.
+On top of that, if you in a hot loop you have to run a callback (high-order function), in
+some languages that could be an additional performance trap.  Instead, running callbacks in
+a `for` loop in Julia is as fast as it goes, so if this is your use-case, then you can
+experience some very large speedups.
 
 If you're willing to move your code to Julia, the improvements you should expect are not
-necessarily about speed: you will work in a portable language, and get access to a wide,
-composable ecosystem of packages for numerical computing, with possibility to switch to use
-hardware accelerators (like GPUs) with minimal effort.
+necessarily, or not only, about speed: you will work in a portable language, and get access
+to a wide, composable ecosystem of packages for numerical computing, with possibility to
+switch to use hardware accelerators (like GPUs) with minimal effort.
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
