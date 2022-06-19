@@ -14,7 +14,7 @@ _Question_: _**What are macros in Julia?**_
 _Answer_: Macros are sort of functions which take as input _unevaluated_ expressions
 ([`Expr`](https://docs.julialang.org/en/v1/base/base/#Core.Expr)) and return as output
 another expression, whose code is then regularly evaluated at runtime.  This post isn't a
-substitue for reading the [section about macros in the Julia
+substitute for reading the [section about macros in the Julia
 documentation](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros), it's
 more complementary to it, a light tutorial for newcomers, but I warmly suggest reading the
 manual to learn more about them.
@@ -30,15 +30,15 @@ calls (which sometimes upsets Lisp purists):
   function: in `f(g(2, 5.6))`, we know that the function `g(2, 5.6)` will always be
   evaluated before calling `f` on its result.  Instead, the expression which is given as
   input to a macro can in principle be discarded and never taken into account and the macro
-  can be something completely different: in `@f g(2, 5.6)`, the function `g(2, 5.6)` may
-  actually never happen, or `g` may be called with different arguments, or `g` is called
-  with modified arguments, or however the macro `@f` has been designed to rewrite the given
-  expressions;
+  can be something completely different: in `@f g(2, 5.6)`, the expression `g(2, 5.6)` is
+  taken unevaluated and rewritten into something else.  The function `g` may actually never
+  be called, or it may be called with different arguments, or whatever the macro `@f` has
+  been designed to rewrite the given expression;
 * nested macro calls are evaluated left-to-right, while nested function calls are evaluated
   right-to-left: in the expression `f(g())`, the function `g()` is first called and then fed
-  into `f`, instead in `@f @g x` the macro `@f` will first rewrite the expression `@g x`,
-  and then, if it is still there after the expression-rewrite operated by `@f` (remember the
-  previous point?), the macro `@g` is expanded.
+  into `f`, instead in `@f @g x` the macro `@f` will first rewrite the unevaluated
+  expression `@g x`, and then, if it is still there after the expression-rewrite operated by
+  `@f` (remember the previous point?), the macro `@g` is expanded.
 
 Writing a macro can also be an unpleasant experience the first times you try it, because a
 macro operates on a new level (expressions, which you want to turn into other expressions)
@@ -48,7 +48,7 @@ tricky to get initially right.  However it may help remembering that the `Expr` 
 operate on are regular Julia objects, which you can access and modify like any other Julia
 structure.  So you can think of a macro as a regular function which operates on `Expr`
 objects, to return a new `Expr`.  This isn't a simplification: many macros are actually
-defined to simply call a regular function which does all the expression rewriting business.
+defined to only call a regular function which does all the expression rewriting business.
 
 _Q_: _**Should I write a macro?**_
 
@@ -61,9 +61,9 @@ Also, macros don't compose very well: remember that any macro can rewrite an exp
 completely arbitrary way, so nesting macros can sometimes have unexpected results, if the
 outermost macro doesn't anticipate the possibility the expressions it operates on may
 contain another macro which expects a specific expression.  In practice, this is less of a
-problem than it may sound, but it definitely happens if you overuse many complicated macros.
-This is one more reason why you should not write a macro in your code unless it's really
-necessary to substantially simplify the code.
+problem than it may sound, but it can definitely happens if you overuse many complicated
+macros.  This is one more reason why you should not write a macro in your code unless it's
+really necessary to substantially simplify the code.
 
 _Q_: _**So, what's the deal with macros?**_
 
@@ -116,10 +116,10 @@ Closest candidates are:
 This is different from a `const` variable, because you can reassign a type-annotated global
 variable to another value with the same type (or
 [`convert`](https://docs.julialang.org/en/v1/base/base/#Base.convert)ible to the annotated
-type), while reassigning a `const` variable isn't possible (or recommended).  But the type
-would still be constant, which helps the compiler optimising the code.  Note that `x = 10`
-returns `10` (an `Int`) but the actual value of `x` is `10.0` (a `Float64`) because
-[assignment returns the right-hand side]({{ site.baseurl }}{% post_url
+type), while reassigning a `const` variable isn't possible (nor recommended).  But the type
+would still be constant, which helps the compiler optimising code which accesses this global
+variable.  Note that `x = 10` returns `10` (an `Int`) but the actual value of `x` is `10.0`
+(a `Float64`) because [assignment returns the right-hand side]({{ site.baseurl }}{% post_url
 2017-12-02-julia-assignment %}) but the value `10` is `convert`ed to `Float64` before
 assigning it to `x`.
 
@@ -128,8 +128,8 @@ type-annotated globals is that in the expression `x::Float64 = 3.14` it's easy t
 the type we want to attach to `x`, but if you want to make `x = f()` a type-annotated global
 variable and the type of `f()` is much more involved than `Float64`, perhaps a [type with
 few parameters](https://docs.julialang.org/en/v1/manual/types/#Parametric-Types), then doing
-the type annotation can be annoying.  Mind, not impossible, just tedious.  So, that's were a
-macro could come in handy!
+the type annotation can be annoying.  Mind, not impossible, just tedious.  So, that's where
+a macro could come in handy!
 
 The idea is to have a macro, which we'll call `@stable`, which operates like this:
 
@@ -144,9 +144,9 @@ x::typeof(2) = 2
 ```
 
 so that we can automatically infer the type of `x` from the expression on the right-hand
-side, without having to type it ourselves.  A useful tool when dealing with macros is the
-[`Meta.@dump`](https://docs.julialang.org/en/v1/base/io-network/#Base.Meta.@dump) macro
-(another macro, yay!).
+side, without having to type it ourselves.  A useful tool when dealing with macros is
+[`Meta.@dump`](https://docs.julialang.org/en/v1/base/io-network/#Base.Meta.@dump) (another
+macro, yay!).
 
 ```julia
 julia> Meta.@dump x = 2
@@ -305,13 +305,13 @@ julia> @macroexpand @stable y = rand()
 ```
 
 _Oh, I think I see it now: the way we defined the macro, the same expression, `rand()`, is
-used twice, once inside `typeof`, and then on the right-hand side of the assignment, but
+used twice: once inside `typeof`, and then on the right-hand side of the assignment, but
 this means we're actually calling that function twice, even though the expression is the
 same._  Correct!  And this isn't good for at least two reasons:
 
 * the expression on the right-hand side of the assignment can be expensive to run, and
   calling it twice wouldn't be a good outcome: we wanted to create a macro to simply things,
-  not to spend twice as much time
+  not to spend twice as much time;
 * the expression on the right-hand side of the assignment can have side effects, which is
   precisely the case of the `rand()` function: every time you call `rand()` you're advancing
   the mutable state of the random number generator, but if you call it twice instead of
@@ -481,7 +481,7 @@ the other cases we should throw a useful error message._  You're getting the han
 
 ```julia
 julia> macro stable(ex::Expr)
-           (ex.head !== :(=) || !(ex.args[1] isa Symbol)) && throw(ArgumentError("@stable: `$(ex)` is not an assigment expression."))
+           (ex.head === :(=) && ex.args[1] isa Symbol) || throw(ArgumentError("@stable: `$(ex)` is not an assigment expression."))
            quote
                tmp = $(esc(ex.args[2]))
                $(esc(ex.args[1]))::typeof(tmp) = tmp
@@ -511,6 +511,18 @@ simplify writing more complicated expressions or programmatically write more cod
 This post is inspired by a macro which I wrote some months ago for the [Seven Lines of
 Julia](https://discourse.julialang.org/t/seven-lines-of-julia-examples-sought/50416/157)
 thread on JuliaLang Discourse.
+
+_This was cool!  Where can I learn more about macros?_  Good to hear!  I hope now you aren't
+going to abuse macros though!  But if you do want to learn something more about macros, in
+addition to the official documentation, some useful resources are:
+
+* [A Brief Introduction to Julia Metaprogramming, Macros, and Generated
+  Functions](https://nextjournal.com/a/KpqWNKDvNLnkBrgiasA35?change-id=CQRuZrWB1XaT71H92x8Y2Q)
+* [Introduction to macros | Week 3 | 18.S191 MIT Fall
+  2020](https://www.youtube.com/watch?v=e6LGMeoQhfs)
+* [Julia Macro hygiene made easy! - Tom Kwong](https://www.youtube.com/watch?v=JePBb9-ychE)
+* [Julia macros for
+  beginners](https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/)
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
