@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "My first macro in Julia"
-tags: [julia, draft, macro, metaprogramming]
+tags: [julia, macro, metaprogramming]
 ---
 
 This post isn't about the first macro I wrote in the [Julia programming
