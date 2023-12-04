@@ -483,7 +483,7 @@ the other cases we should throw a useful error message._  You're getting the han
 julia> macro stable(ex::Expr)
            (ex.head === :(=) && ex.args[1] isa Symbol) || throw(ArgumentError("@stable: `$(ex)` is not an assigment expression."))
            quote
-               tmp = $(esc(ex.args[2]))
+               local tmp = $(esc(ex.args[2]))
                $(esc(ex.args[1]))::typeof(tmp) = tmp
            end
        end
