@@ -523,6 +523,7 @@ addition to the official documentation, some useful resources are:
 * [Julia Macro hygiene made easy! - Tom Kwong](https://www.youtube.com/watch?v=JePBb9-ychE)
 * [Julia macros for
   beginners](https://jkrumbiegel.com/pages/2021-06-07-macros-for-beginners/)
+* [Composing macros inside-out with Julia](https://jkrumbiegel.com/pages/2022-08-09-composing-macros/)
 
 <!-- Local Variables: -->
 <!-- ispell-local-dictionary: "british" -->
