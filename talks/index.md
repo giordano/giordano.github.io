@@ -9,3 +9,4 @@ title: Talks and presentations
 * 2024-03-08: [Dynamic roofline model with Pluto](./2024-03-08-roofline)
 * 2024-03-27: [Automatic differentiation on the IPU with Enzyme.jl](./2024-03-27-julia-ipu-enzymecon)
 * 2024-06-20: [Julia meets the Intelligence Processing Unit](./2024-06-20-julia-ipu-ornl)
+* 2025-01-27: [Simple showcase of multithreading and GPU programming in Julia](./2025-01-27-multithreading-gpu)
