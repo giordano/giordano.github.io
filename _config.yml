@@ -26,6 +26,7 @@ navbar-links:
   Blog:
     - { Home: 'blog/' }
     - { Tags: 'blog/tags/' }
+  Talks: "talks"
   About Me: "aboutme"
   Source: "https://github.com/giordano/giordano.github.io/"
 
