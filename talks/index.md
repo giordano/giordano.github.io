@@ -11,3 +11,4 @@ title: Talks and presentations
 * 2024-06-20: [Julia meets the Intelligence Processing Unit](./2024-06-20-julia-ipu-ornl)
 * 2025-01-27: [Simple showcase of multithreading and GPU programming in Julia](./2025-01-27-multithreading-gpu)
 * 2025-06-17: [Reproducible Heterogeneous Computing with the Julia Language](./2025-06-17-pasc-reproducible-julia-ipu)
+* 2026-03-06: [Not Only GPUs: Running Julia on Custom Machine Learning Accelerators](./2026-03-06-siam-pp26-julia-ipu)
