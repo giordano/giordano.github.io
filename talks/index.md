@@ -13,3 +13,4 @@ title: Talks and presentations
 * 2025-06-17: [Reproducible Heterogeneous Computing with the Julia Language](./2025-06-17-pasc-reproducible-julia-ipu)
 * 2026-03-06: [Not Only GPUs: Running Julia on Custom Machine Learning Accelerators](./2026-03-06-siam-pp26-julia-ipu)
 * 2026-03-12: [High-performance computing with the Julia language](./2026-03-12-julia-hpc-rse-seminar)
+* 2026-04-16: [Julia for Research Software Engineering](./2026-04-16-julia-rse-stfc)
